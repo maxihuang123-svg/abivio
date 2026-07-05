@@ -73,6 +73,25 @@ app.get('/programs', async (c) => {
   return c.json({ programs: results || [] });
 });
 
+interface University {
+  id: number;
+  name: string;
+  short_name: string;
+  type: string;
+  federal_state: string;
+  city: string;
+  website: string;
+  student_count: number;
+}
+
+// List all universities
+app.get('/universities', async (c) => {
+  const { results } = await c.env.DB
+    .prepare('SELECT id, name, short_name, type, federal_state, city, website, student_count FROM universities ORDER BY name ASC')
+    .all<University>();
+  return c.json({ universities: results || [], count: results?.length || 0 });
+});
+
 // Submit quiz and compute recommendations
 app.post('/quiz', async (c) => {
   const body = await c.req.json<{ session_id?: string; answers?: QuizAnswers }>();

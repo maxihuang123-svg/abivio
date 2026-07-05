@@ -5,6 +5,37 @@ DROP TABLE IF EXISTS quiz_sessions;
 DROP TABLE IF EXISTS quiz_answers;
 DROP TABLE IF EXISTS recommendations;
 DROP TABLE IF EXISTS programs;
+DROP TABLE IF EXISTS universities;
+
+-- German universities (source: Hochschulkompass HRK)
+CREATE TABLE universities (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  hs_number INTEGER,
+  short_name TEXT,
+  name TEXT NOT NULL,
+  address_name TEXT,
+  type TEXT,
+  ownership TEXT,
+  federal_state TEXT,
+  student_count INTEGER,
+  founded_year INTEGER,
+  has_phd_right BOOLEAN DEFAULT 0,
+  has_habilitation_right BOOLEAN DEFAULT 0,
+  street TEXT,
+  zip TEXT,
+  city TEXT,
+  po_box TEXT,
+  po_zip TEXT,
+  po_city TEXT,
+  phone_prefix TEXT,
+  phone TEXT,
+  fax TEXT,
+  website TEXT,
+  is_hrk_member BOOLEAN DEFAULT 0,
+  latitude REAL,
+  longitude REAL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Waitlist entries from landing page
 CREATE TABLE waitlist (
@@ -17,10 +48,11 @@ CREATE TABLE waitlist (
 -- Curated study programs (MVP seed dataset)
 CREATE TABLE programs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  university_id INTEGER,
   name TEXT NOT NULL,
   field TEXT NOT NULL,
-  degree TEXT NOT NULL,
-  duration_semesters INTEGER,
+  degree TEXT DEFAULT 'Bachelor',
+  duration_semesters INTEGER DEFAULT 6,
   language TEXT DEFAULT 'de',
   nc_required BOOLEAN DEFAULT 0,
   nc_grade REAL,
@@ -36,7 +68,8 @@ CREATE TABLE programs (
   is_creative BOOLEAN DEFAULT 0,
   is_health BOOLEAN DEFAULT 0,
   popularity_rank INTEGER DEFAULT 999,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (university_id) REFERENCES universities(id)
 );
 
 -- Quiz sessions

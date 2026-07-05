@@ -8,7 +8,9 @@
     "db:create": "wrangler d1 create abivio-db",
     "db:migrate": "wrangler d1 execute abivio-db --file=./db/schema.sql",
     "db:seed": "wrangler d1 execute abivio-db --file=./db/seed.sql",
-    "db:reset": "wrangler d1 execute abivio-db --file=./db/schema.sql && wrangler d1 execute abivio-db --file=./db/seed.sql",
+    "db:seed:universities": "wrangler d1 execute abivio-db --file=./db/universities_seed.sql",
+    "db:reset": "wrangler d1 execute abivio-db --file=./db/schema.sql && wrangler d1 execute abivio-db --file=./db/universities_seed.sql && wrangler d1 execute abivio-db --file=./db/seed.sql",
+    "db:parse:universities": "node scripts/parse-universities.js && node scripts/generate-university-seed.js",
     "cf-typegen": "wrangler types"
   },
   "keywords": ["studium", "empfehlung", "abitur", "ki", "cloudflare"],
