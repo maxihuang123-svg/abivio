@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>abivio — Dein Studium, smarter gefunden</title>
+  <meta name="description" content="abivio hilft Abiturienten in Deutschland, das passende Studium mit einem smarten Quiz zu finden.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">abivio</a>
+      <nav class="nav">
+        <a href="#quiz" class="nav-link">Quiz starten</a>
+        <a href="#so-funktioniert-es" class="nav-link">So funktioniert's</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="badge">Jetzt für das Wintersemester 2026/27</span>
+          <h1>Finde dein Studium — ohne stundenlanges Googlen.</h1>
+          <p class="hero-subtitle">
+            abivio zeigt dir in 5 Minuten, welche Bachelor-Studiengänge in Deutschland wirklich zu dir passen. Basierend auf deinen Interessen, Stärken und Wünschen.
+          </p>
+          <div class="hero-actions">
+            <a href="#quiz" class="btn btn-primary">Zum Quiz</a>
+            <a href="#waitlist" class="btn btn-secondary">Auf die Waitlist</a>
+          </div>
+          <p class="hero-note">100% kostenlos. Kein Account nötig.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Waitlist -->
+    <section id="waitlist" class="section section-muted">
+      <div class="container narrow">
+        <h2>Trag dich auf die Waitlist ein</h2>
+        <p>Sei unter den ersten, die abivio nutzen. Wir schreiben dich an, sobald neue Features live gehen — z. B. Bewerbungsfristen-Reminder und 1:1 Coaching.</p>
+        <form id="waitlist-form" class="waitlist-form">
+          <div class="form-row">
+            <input type="email" name="email" placeholder="Deine E-Mail-Adresse" required class="input">
+            <select name="graduationYear" class="input">
+              <option value="" disabled selected>Abi-Jahr</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Eintragen</button>
+          </div>
+          <p id="waitlist-message" class="form-message" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="so-funktioniert-es" class="section">
+      <div class="container">
+        <h2>So funktioniert abivio</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Quiz beantworten</h3>
+            <p>7 kurze Fragen zu deinen Interessen, Stärken und Vorstellungen.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Empfehlungen erhalten</h3>
+            <p>Unser Algorithmus findet die passendsten Bachelor-Studiengänge für dich.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Weitere Schritte planen</h3>
+            <p>Entdecke Studiengänge, prüfe NCs und starte deine Bewerbung.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="section section-accent">
+      <div class="container narrow">
+        <div class="quiz-header">
+          <h2>Das abivio-Quiz</h2>
+          <p>Beantworte die Fragen ehrlich — es gibt keine falschen Antworten.</p>
+        </div>
+
+        <div id="quiz-progress" class="quiz-progress" hidden>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <span class="progress-text" id="progress-text">Frage 1 von 7</span>
+        </div>
+
+        <form id="quiz-form" class="quiz-form">
+          <!-- Questions will be injected by JS -->
+        </form>
+
+        <div id="quiz-loading" class="quiz-loading" hidden>
+          <div class="spinner"></div>
+          <p>Wir berechnen deine persönlichen Empfehlungen…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="results" class="section section-results" hidden>
+      <div class="container narrow">
+        <h2>Deine Top-Studiengänge</h2>
+        <p class="results-intro">Basierend auf deinen Antworten passen diese Studiengänge besonders gut zu dir:</p>
+        <div id="results-list" class="results-list"></div>
+        <div class="results-actions">
+          <a href="#quiz" id="retake-quiz" class="btn btn-secondary">Quiz wiederholen</a>
+          <a href="#waitlist" class="btn btn-primary">Mehr Tipps per Mail</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 abivio.de — Made for Abiturienten in Deutschland.</p>
+      <p class="footer-links">
+        <a href="/impressum.html">Impressum</a> · <a href="/datenschutz.html">Datenschutz</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

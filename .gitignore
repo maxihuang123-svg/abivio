@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Wrangler local state
+.wrangler/
+
+# Logs
+*.log
+dev-out.log
+dev-err.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Output files
+deploy-output.txt
+project-create-output.txt
+d1-create-output.txt

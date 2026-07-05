@@ -1,0 +1,22 @@
+{
+  "name": "abivio",
+  "version": "1.0.0",
+  "description": "KI-gestützte Studienempfehlungsplattform für deutsche Abiturienten",
+  "scripts": {
+    "dev": "wrangler pages dev frontend --compatibility-date=2026-06-28",
+    "deploy": "wrangler pages deploy frontend",
+    "db:create": "wrangler d1 create abivio-db",
+    "db:migrate": "wrangler d1 execute abivio-db --file=./db/schema.sql",
+    "db:seed": "wrangler d1 execute abivio-db --file=./db/seed.sql",
+    "db:reset": "wrangler d1 execute abivio-db --file=./db/schema.sql && wrangler d1 execute abivio-db --file=./db/seed.sql",
+    "cf-typegen": "wrangler types"
+  },
+  "keywords": ["studium", "empfehlung", "abitur", "ki", "cloudflare"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260628.0",
+    "hono": "^4.8.0",
+    "wrangler": "^4.105.0"
+  }
+}
