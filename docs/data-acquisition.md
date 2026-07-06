@@ -160,6 +160,35 @@ Jede Hochschule veröffentlicht ihre Studiengänge selbst. Hier gibt es zwei Ans
 
 ---
 
+## Woher hat Hochschulkompass seine Daten?
+
+Hochschulkompass ist das offizielle Portal der **Hochschulrektorenkonferenz (HRK)**.
+
+### Datenherkunft
+
+- Die Daten kommen **direkt von den Hochschulen**.
+- Jede Hochschule pflegt ihren eigenen Eintrag.
+- Hochschulen melden:
+  - Namen und Adressen
+  - Studiengänge und Abschlüsse
+  - Zulassungsmodalitäten
+  - Kontaktdaten
+  - Trägerschaft und Hochschultyp
+
+### Warum gibt es keine öffentliche API?
+
+- Die Daten sind Eigentum der Hochschulrektorenkonferenz.
+- Der Betrieb wird durch Mitgliedsbeiträge und Kooperationen finanziert.
+- Datenlizenzen werden kommerziell vergeben.
+
+### Was bedeutet das für abivio?
+
+- Die TXT-Liste der Hochschulen ist für persönlichen Gebrauch frei.
+- Studiengangsdaten sind nicht als Open Data verfügbar.
+- Eine saubere Lösung wäre eine **Kooperation oder Lizenzvereinbarung** mit der HRK.
+
+---
+
 ## Fazit
 
 **Manuelle Kuratierung + LLM** ist der beste Start, weil es:
@@ -168,4 +197,4 @@ Jede Hochschule veröffentlicht ihre Studiengänge selbst. Hier gibt es zwei Ans
 - gute Ergebnisse liefert
 - später durch offizielle Datenquellen ergänzt werden kann
 
-Scraping ist nur die letzte Option — und nur mit Erlaubnis.
+Scraping und Screenshot-basierte Extraktion sind nur die letzte Option — und nur mit Erlaubnis.
