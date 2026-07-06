@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Informatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "BWL",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Psychologie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.3
+  }
+]

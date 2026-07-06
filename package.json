@@ -13,6 +13,7 @@
     "db:parse:universities": "node scripts/parse-universities.js && node scripts/generate-university-seed.js",
     "scraper:example": "node scripts/scraper/example.js",
     "scraper:robots": "node scripts/scraper/check-robots.js",
+    "enrich:programs": "node scripts/enrich-programs.js",
     "cf-typegen": "wrangler types"
   },
   "keywords": [
