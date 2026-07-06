@@ -36,38 +36,122 @@ const WORKSTYLE_TAGS = [
  * In der echten Version würde hier OpenAI/Claude aufgerufen.
  */
 async function mockEnrich(program) {
-  // Einfache regelbasierte Zuweisung als Demo
+  const name = program.name.toLowerCase();
+  const field = program.field;
+
+  // Interessen-Tags nach Fachrichtung
   const fieldToInterests = {
-    'Technik & IT': ['technik', 'logik', 'digitales'],
-    'Wirtschaft': ['wirtschaft', 'management', 'finanzen'],
-    'Medizin & Gesundheit': ['medizin', 'mensch', 'gesundheit'],
-    'Naturwissenschaften': ['natur', 'forschung', 'logik'],
-    'Design': ['kreativ', 'design', 'technik'],
-    'Recht': ['recht', 'gesellschaft', 'logik'],
-    'Soziales': ['mensch', 'sozial', 'beratung'],
+    'Technik & IT': ['technik', 'logik', 'digitales', 'mathematik'],
+    'Ingenieurwesen': ['technik', 'handwerk', 'energie', 'fahrzeuge'],
+    'Wirtschaft': ['wirtschaft', 'management', 'finanzen', 'unternehmertum'],
+    'Medizin & Gesundheit': ['medizin', 'mensch', 'gesundheit', 'beratung'],
+    'Naturwissenschaften': ['natur', 'forschung', 'logik', 'labor'],
+    'Design': ['kreativ', 'design', 'medien', 'technik'],
+    'Medien': ['medien', 'kommunikation', 'kultur', 'kreativ'],
+    'Recht': ['recht', 'gesellschaft', 'logik', 'politik'],
+    'Soziales': ['mensch', 'sozial', 'beratung', 'gesellschaft'],
+    'Geisteswissenschaften': ['kultur', 'sprachen', 'geschichte', 'forschung'],
+    'Sprachen': ['sprachen', 'kultur', 'literatur', 'reisen'],
+    'Kunst': ['kunst', 'kreativ', 'musik', 'kultur'],
+    'Umwelt': ['natur', 'umwelt', 'forschung', 'gesellschaft'],
+    'Sport': ['sport', 'gesundheit', 'mensch', 'management'],
+    'Lehramt': ['mensch', 'bildung', 'gesellschaft', 'kommunikation'],
+    'Interdisziplinär': ['technik', 'mensch', 'forschung', 'logik'],
   };
 
+  // Schulfächer nach Fachrichtung
   const fieldToStrengths = {
-    'Technik & IT': ['mathematik', 'informatik'],
-    'Wirtschaft': ['mathematik', 'deutsch'],
-    'Medizin & Gesundheit': ['biologie', 'chemie'],
-    'Naturwissenschaften': ['mathematik', 'physik'],
-    'Design': ['kunst', 'informatik'],
-    'Recht': ['deutsch', 'geschichte'],
-    'Soziales': ['deutsch', 'sozialkunde'],
+    'Technik & IT': ['mathematik', 'informatik', 'physik'],
+    'Ingenieurwesen': ['mathematik', 'physik', 'chemie'],
+    'Wirtschaft': ['mathematik', 'deutsch', 'englisch'],
+    'Medizin & Gesundheit': ['biologie', 'chemie', 'mathematik'],
+    'Naturwissenschaften': ['mathematik', 'chemie', 'biologie'],
+    'Design': ['kunst', 'informatik', 'mathematik'],
+    'Medien': ['deutsch', 'englisch', 'kunst'],
+    'Recht': ['deutsch', 'geschichte', 'englisch'],
+    'Soziales': ['deutsch', 'sozialkunde', 'biologie'],
+    'Geisteswissenschaften': ['deutsch', 'geschichte', 'englisch'],
+    'Sprachen': ['englisch', 'deutsch', 'geschichte'],
+    'Kunst': ['kunst', 'deutsch', 'englisch'],
+    'Umwelt': ['biologie', 'chemie', 'geografie'],
+    'Sport': ['sport', 'biologie', 'mathematik'],
+    'Lehramt': ['deutsch', 'mathematik', 'englisch'],
+    'Interdisziplinär': ['mathematik', 'biologie', 'informatik'],
   };
 
-  const interests = fieldToInterests[program.field] || ['mensch', 'gesellschaft'];
-  const strengths = fieldToStrengths[program.field] || ['deutsch', 'englisch'];
+  // Beschreibungen nach Fachrichtung
+  const fieldToDescription = {
+    'Technik & IT': `Im ${program.name}-Studium lernst du, digitale Systeme, Software und Daten zu verstehen, zu gestalten und weiterzuentwickeln.`,
+    'Ingenieurwesen': `Das ${program.name}-Studium vermittelt ingenieurwissenschaftliche Grundlagen und Methoden zur Entwicklung technischer Lösungen.`,
+    'Wirtschaft': `Im ${program.name}-Studium erwirbst du betriebswirtschaftliches Know-how und lernst, Unternehmen zu führen und zu optimieren.`,
+    'Medizin & Gesundheit': `Das ${program.name}-Studium bereitet dich auf Berufe im Gesundheitswesen vor und vermittelt medizinische und pflegerische Kompetenzen.`,
+    'Naturwissenschaften': `Im ${program.name}-Studium erforschst du naturwissenschaftliche Zusammenhänge und arbeitest analytisch sowie experimentell.`,
+    'Design': `Das ${program.name}-Studium verbindet Kreativität mit technischem Verständnis und lehrt dich, Produkte und Medien zu gestalten.`,
+    'Medien': `Im ${program.name}-Studium beschäftigst du dich mit Journalismus, Kommunikation, Medienproduktion und deren gesellschaftlicher Wirkung.`,
+    'Recht': `Das ${program.name}-Studium vermittelt Rechtskenntnisse und die Fähigkeit, komplexe Sachverhalte juristisch zu analysieren.`,
+    'Soziales': `Im ${program.name}-Studium lernst du, Menschen in schwierigen Lebenslagen zu unterstützen und soziale Projekte zu gestalten.`,
+    'Geisteswissenschaften': `Das ${program.name}-Studium fördert analytisches Denken und ein vertieftes Verständnis von Kultur, Geschichte und Gesellschaft.`,
+    'Sprachen': `Im ${program.name}-Studium vertiefst du Sprachkenntnisse und beschäftigst dich mit Literatur, Kultur und Übersetzung.`,
+    'Kunst': `Das ${program.name}-Studium entwickelt deine künstlerischen Fähigkeiten und vermittelt theoretisches Wissen über Kunst und Kultur.`,
+    'Umwelt': `Im ${program.name}-Studium beschäftigst du dich mit ökologischen, naturwissenschaftlichen und gesellschaftlichen Aspekten der Umwelt.`,
+    'Sport': `Das ${program.name}-Studium verbindet Sportwissenschaft mit Gesundheit, Management oder pädagogischen Inhalten.`,
+    'Lehramt': `Das ${program.name}-Studium bereitet dich auf den Lehrberuf vor und vermittelt Fachwissen sowie Didaktik.`,
+    'Interdisziplinär': `Das ${program.name}-Studium verbindet verschiedene Disziplinen und bereitet dich auf komplexe, fachübergreifende Aufgaben vor.`,
+  };
+
+  // Berufsperspektiven nach Fachrichtung
+  const fieldToCareer = {
+    'Technik & IT': 'Softwareentwickler, IT-Berater, Data Engineer, Produktmanager',
+    'Ingenieurwesen': 'Ingenieur, Projektleiter, Konstrukteur, F&E-Spezialist',
+    'Wirtschaft': 'Consultant, Controller, Marketingmanager, Unternehmensberater',
+    'Medizin & Gesundheit': 'Arzt, Psychologe, Therapeut, Gesundheitsmanager',
+    'Naturwissenschaften': 'Forscher, Laborleiter, Qualitätsmanager, Berater',
+    'Design': 'Designer, Art Director, UX-Designer, Produktdesigner',
+    'Medien': 'Journalist, PR-Manager, Content Manager, Medienberater',
+    'Recht': 'Rechtsanwalt, Unternehmensjurist, Richter, Compliance-Manager',
+    'Soziales': 'Sozialarbeiter, Jugendhilfe, Berater, Projektmanager',
+    'Geisteswissenschaften': 'Journalist, Kulturmanager, Lehrer, Berater',
+    'Sprachen': 'Lehrer, Übersetzer, Lektor, Kommunikationsmanager',
+    'Kunst': 'Künstler, Kulturmanager, Lehrer, Kurator',
+    'Umwelt': 'Umweltberater, Naturschützer, Klimamanager, Forscher',
+    'Sport': 'Trainer, Sportmanager, Gesundheitsberater, Lehrer',
+    'Lehramt': 'Lehrer, Bildungsmanager, Coach',
+    'Interdisziplinär': 'Berater, Projektmanager, Forscher, Fachexperte',
+  };
+
+  // Arbeitstile nach Fachrichtung
+  const fieldToWorkStyle = {
+    'Technik & IT': ['analytisch', 'problemloesend', 'selbstaendig'],
+    'Ingenieurwesen': ['praktisch', 'analytisch', 'teamfaehig'],
+    'Wirtschaft': ['kommunikativ', 'strategisch', 'zielorientiert'],
+    'Medizin & Gesundheit': ['empathisch', 'praezise', 'belastbar'],
+    'Naturwissenschaften': ['analytisch', 'experimentell', 'geduldig'],
+    'Design': ['kreativ', 'visuell', 'detailorientiert'],
+    'Medien': ['kommunikativ', 'recherchefreudig', 'textgewandt'],
+    'Recht': ['analytisch', 'sprachgewandt', 'konfliktfaehig'],
+    'Soziales': ['empathisch', 'kommunikativ', 'praktisch'],
+    'Geisteswissenschaften': ['analytisch', 'recherchefreudig', 'kritisch'],
+    'Sprachen': ['sprachgewandt', 'kommunikativ', 'kulturell'],
+    'Kunst': ['kreativ', 'ausdrucksstark', 'selbstaendig'],
+    'Umwelt': ['engagiert', 'analytisch', 'praktisch'],
+    'Sport': ['praktisch', 'motivierend', 'teamfaehig'],
+    'Lehramt': ['kommunikativ', 'geduldig', 'strukturiert'],
+    'Interdisziplinär': ['analytisch', 'kommunikativ', 'flexibel'],
+  };
+
+  const interests = fieldToInterests[field] || ['mensch', 'gesellschaft'];
+  const strengths = fieldToStrengths[field] || ['deutsch', 'englisch'];
+  const description = fieldToDescription[field] || `${program.name} ist ein ${program.degree}-Studiengang im Bereich ${field}.`;
+  const career = fieldToCareer[field] || 'Berufsmöglichkeiten hängen von Schwerpunktsetzung und Praktika ab.';
+  const workStyle = fieldToWorkStyle[field] || ['analytisch', 'kommunikativ'];
 
   return {
     ...program,
-    description: `${program.name} ist ein ${program.degree}-Studiengang im Bereich ${program.field}. ` +
-                 `Er vermittelt fachspezifisches Wissen und Methodenkompetenz für den jeweiligen Berufsfeld.`,
-    career: 'Berufsmöglichkeiten hängen von Schwerpunktsetzung und Praktika ab.',
-    interests: JSON.stringify(interests),
-    strengths: JSON.stringify(strengths),
-    work_style: JSON.stringify(['analytisch', 'kommunikativ']),
+    description,
+    career,
+    interests: JSON.stringify(interests.slice(0, 4)),
+    strengths: JSON.stringify(strengths.slice(0, 3)),
+    work_style: JSON.stringify(workStyle),
   };
 }
 

@@ -1,0 +1,1802 @@
+[
+  {
+    "name": "Informatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Data Science",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Künstliche Intelligenz",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Cybersecurity",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Software Engineering",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Medieninformatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Bioinformatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Geoinformatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Wirtschaftsinformatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Computerlinguistik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Robotik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2
+  },
+  {
+    "name": "Game Design",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Internet of Things",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Cloud Computing",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Blockchain-Technologie",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Human-Computer Interaction",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "IT-Sicherheit",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Data Engineering",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Machine Learning",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Computer Science",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2
+  },
+  {
+    "name": "Information Systems",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Business Informatics",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Digitale Medien",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Technische Informatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Praktische Informatik",
+    "field": "Technik & IT",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Maschinenbau",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Elektrotechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Bauingenieurwesen",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.9
+  },
+  {
+    "name": "Verfahrenstechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Chemieingenieurwesen",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Umwelttechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Energietechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Fahrzeugtechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Luft- und Raumfahrttechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.1
+  },
+  {
+    "name": "Mechatronik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Medizintechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Wirtschaftsingenieurwesen",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Industrial Engineering",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Automotive Engineering",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Biomedical Engineering",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Materialwissenschaft",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Nanotechnologie",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Optotechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Schiffbau",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Verkehrsingenieurwesen",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Gebäudetechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 3
+  },
+  {
+    "name": "Tiefbau",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.9
+  },
+  {
+    "name": "Wasserwesen",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.9
+  },
+  {
+    "name": "Produktionstechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Feinwerktechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Textiltechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 3
+  },
+  {
+    "name": "Bergbau",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 3
+  },
+  {
+    "name": "Hüttenwesen",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 3
+  },
+  {
+    "name": "Raumfahrttechnik",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Technisches Management",
+    "field": "Ingenieurwesen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "BWL",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Volkswirtschaftslehre",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "International Business",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Marketingmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Finanzmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Rechnungswesen",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Logistikmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Tourismusmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Hotelmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Eventmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Immobilienwirtschaft",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Sportmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Medienmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Kulturmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Gesundheitsmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Versicherungswirtschaft",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Bankwirtschaft",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Handelsmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Supply Chain Management",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Business Administration",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Entrepreneurship",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Digital Business",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "E-Commerce",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Personalmanagement",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Controlling",
+    "field": "Wirtschaft",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Medizin",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 12,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1
+  },
+  {
+    "name": "Zahnmedizin",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 10,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.1
+  },
+  {
+    "name": "Psychologie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.3
+  },
+  {
+    "name": "Pharmazie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.4
+  },
+  {
+    "name": "Pflegewissenschaft",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Molekulare Biomedizin",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.5
+  },
+  {
+    "name": "Ernährungswissenschaft",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Public Health",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Medizinische Informatik",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Gesundheitswissenschaften",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Humanmedizin",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 12,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1
+  },
+  {
+    "name": "Zahnmedizin",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 10,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.1
+  },
+  {
+    "name": "Molekulare Medizin",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.6
+  },
+  {
+    "name": "Medizintechnologie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Hebammenwissenschaft",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Therapiewissenschaften",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Sporttherapie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Logopädie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Ergotherapie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Physiotherapie",
+    "field": "Medizin & Gesundheit",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Physik",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Chemie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Biologie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Mathematik",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Biochemie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Biotechnologie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Pharmazie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.4
+  },
+  {
+    "name": "Geowissenschaften",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Meteorologie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Ozeanographie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Astrophysik",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Molekularbiologie",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Neuroscience",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2
+  },
+  {
+    "name": "Umweltnaturwissenschaften",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Nanowissenschaften",
+    "field": "Naturwissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Mediendesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Produktdesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Kommunikationsdesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Industriedesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Fashion Design",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Interior Design",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Grafikdesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "User Experience Design",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Interaction Design",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Textildesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Möbeldesign",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Visuelle Kommunikation",
+    "field": "Design",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Kommunikationswissenschaft",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Journalismus",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2
+  },
+  {
+    "name": "Filmwissenschaft",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Medienwissenschaft",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Public Relations",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Digitale Medien",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Radiojournalismus",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Fernsehjournalismus",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Crossmedia",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Medienproduktion",
+    "field": "Medien",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Rechtswissenschaft",
+    "field": "Recht",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 1.7
+  },
+  {
+    "name": "Wirtschaftsrecht",
+    "field": "Recht",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2
+  },
+  {
+    "name": "Internationales Recht",
+    "field": "Recht",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2
+  },
+  {
+    "name": "Steuerrecht",
+    "field": "Recht",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Medienrecht",
+    "field": "Recht",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Soziale Arbeit",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Politikwissenschaft",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Soziologie",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Pädagogik",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Frühpädagogik",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Sozialmanagement",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Politik und Wirtschaft",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Sozialpädagogik",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Gemeindediakonie",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Interkulturelle Bildung",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Kriminologie",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Nonprofit-Management",
+    "field": "Soziales",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Geschichte",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Philosophie",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Kunstgeschichte",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Theaterwissenschaft",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Musikwissenschaft",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Religionswissenschaft",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Ethnologie",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Kulturwissenschaften",
+    "field": "Geisteswissenschaften",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Anglistik",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Germanistik",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Romanistik",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Slawistik",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Sinologie",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Japanologie",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Übersetzen",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Dolmetschen",
+    "field": "Sprachen",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Bildende Kunst",
+    "field": "Kunst",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Musik",
+    "field": "Kunst",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Schauspiel",
+    "field": "Kunst",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Regie",
+    "field": "Kunst",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Tanz",
+    "field": "Kunst",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Fotografie",
+    "field": "Kunst",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Umweltwissenschaften",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Geografie",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "Landschaftsarchitektur",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Forstwissenschaft",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.8
+  },
+  {
+    "name": "Agrarwissenschaften",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.9
+  },
+  {
+    "name": "Gartenbau",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 3
+  },
+  {
+    "name": "Lebensmitteltechnologie",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Nachhaltigkeitswissenschaften",
+    "field": "Umwelt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Sportwissenschaft",
+    "field": "Sport",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Sportmanagement",
+    "field": "Sport",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Sport und Gesundheit",
+    "field": "Sport",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Bewegungswissenschaft",
+    "field": "Sport",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Lehramt Grundschule",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Lehramt Gymnasium Mathematik/Informatik",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.3
+  },
+  {
+    "name": "Lehramt Gymnasium Englisch/Deutsch",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.4
+  },
+  {
+    "name": "Lehramt Realschule",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.6
+  },
+  {
+    "name": "Lehramt Hauptschule",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Lehramt Sonderpädagogik",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Lehramt Berufsschule",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.7
+  },
+  {
+    "name": "Lehramt Grundschule Deutsch/Mathematik",
+    "field": "Lehramt",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Kognitionswissenschaft",
+    "field": "Interdisziplinär",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "de",
+    "nc_required": true,
+    "nc_grade": 2.2
+  },
+  {
+    "name": "Digital Humanities",
+    "field": "Interdisziplinär",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.5
+  },
+  {
+    "name": "Science and Technology Studies",
+    "field": "Interdisziplinär",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": false,
+    "nc_grade": null
+  },
+  {
+    "name": "European Studies",
+    "field": "Interdisziplinär",
+    "degree": "Bachelor",
+    "duration_semesters": 6,
+    "language": "en",
+    "nc_required": true,
+    "nc_grade": 2.5
+  }
+]
