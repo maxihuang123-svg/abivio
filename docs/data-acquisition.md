@@ -63,13 +63,26 @@ Erstelle:
 Format: JSON
 ```
 
-**Vorteile:**
+### Warum ist das rechtlich sauber?
+
+**Fakten sind frei.** Dinge wie „Informatik ist ein Bachelor-Studiengang mit 6 Semestern Dauer" sind keine urheberrechtlich geschützten Werke. Sie sind allgemein bekannte Informationen.
+
+**Eigen erstellte Texte sind geschützt.** Wenn du oder ein LLM eine Beschreibung formulieren, entsteht ein neuer Text. Dieser Text gehört dir (bzw. demjenigen, der den Prompt geschrieben hat).
+
+**Was nicht erlaubt ist:** Texte 1:1 aus geschützten Quellen kopieren. Also keine Beschreibungen aus dem Hochschulkompass oder von Hochschul-Webseiten übernehmen.
+
+**Was erlaubt ist:**
+- Fakten recherchieren (Name, Dauer, Abschluss, NC)
+- Eigene Beschreibungen schreiben
+- Ein LLM auf Basis dieser Fakten formulieren lassen
+
+### Vorteile
 - Sehr schnell skalierbar
-- Keine rechtlichen Risiken, wenn Fakten selbst recherchiert
+- Rechtlich sauber, wenn Fakten selbst recherchiert
 - Konsistente Sprache und Struktur
 - Gut für Matching-Algorithmus geeignet
 
-**Nachteile:**
+### Nachteile
 - LLM kann Halluzinationen produzieren (muss geprüft werden)
 - Aktuelle NCs/Bewerbungsfristen müssen separat gepflegt werden
 - Keine universitätsspezifischen Details
@@ -189,6 +202,48 @@ Hochschulkompass ist das offizielle Portal der **Hochschulrektorenkonferenz (HRK
 
 ---
 
+## Brauche ich unbedingt eine HRK-Datenpartnerschaft?
+
+### Für den MVP: Nein
+
+Du kannst abivio.de komplett ohne HRK-Daten starten:
+
+- Hochschulen über die TXT-Datei abdecken ✅
+- 100–200 Studiengänge manuell kuratieren
+- LLM für Beschreibungen und Tags nutzen
+- Quiz und Empfehlungen damit betreiben
+
+Das ist ausreichend, um Product-Market-Fit zu testen und erste Nutzer zu gewinnen.
+
+### Für das volle Produkt: Ja, langfristig sinnvoll
+
+Wenn abivio wachsen soll, brauchst du irgendwann:
+
+- Alle ~20.000 Studiengänge
+- Aktuelle NCs pro Hochschule
+- Bewerbungsfristen
+- Sprachanforderungen
+- Zulassungsbeschränkungen
+
+Dafür ist eine offizielle Datenpartnerschaft die sauberste Lösung. Aber bis dahin kannst du mit manueller Kuratierung + Crowdsourcing arbeiten.
+
+### Alternative Wege ohne HRK
+
+1. **Einzelne Hochschulen kontaktieren**
+   - Viele Hochschulen helfen gerne bei sinnvollen Projekten.
+   - Du bekommst aktuellere Daten als vom Aggregator.
+
+2. **Crowdsourcing**
+   - Nutzer ergänzen und korrigieren Studiengangsdaten.
+   - Community-getrieben und skalierbar.
+
+3. **Freiwillige Helfer / Praktikanten**
+   - Studenten kuratieren Daten gegen Anerkennung oder Bezahlung.
+
+4. **Kauf von Datenlizenzen**
+   - Hochschulkompass, CHE und andere bieten Lizenzen an.
+   - Kostet Geld, aber ist rechtlich sauber.
+
 ## Fazit
 
 **Manuelle Kuratierung + LLM** ist der beste Start, weil es:
@@ -197,4 +252,4 @@ Hochschulkompass ist das offizielle Portal der **Hochschulrektorenkonferenz (HRK
 - gute Ergebnisse liefert
 - später durch offizielle Datenquellen ergänzt werden kann
 
-Scraping und Screenshot-basierte Extraktion sind nur die letzte Option — und nur mit Erlaubnis.
+Eine HRK-Datenpartnerschaft ist wünschenswert, aber **keine Voraussetzung** für den MVP. Scraping und Screenshot-basierte Extraktion sind nur die letzte Option — und nur mit Erlaubnis.
