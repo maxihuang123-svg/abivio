@@ -188,13 +188,7 @@ app.post('/feedback', async (c) => {
   try {
     await c.env.DB.prepare(
       `INSERT INTO recommendation_feedback (session_id, helpfulness, found_match, nps, missing)
-       VALUES (?, ?, ?, ?, ?)
-       ON CONFLICT(session_id) DO UPDATE SET
-         helpfulness = excluded.helpfulness,
-         found_match = excluded.found_match,
-         nps = excluded.nps,
-         missing = excluded.missing,
-         created_at = CURRENT_TIMESTAMP`
+       VALUES (?, ?, ?, ?, ?)`
     )
       .bind(sessionId, helpfulness ?? null, foundMatch ?? null, nps ?? null, missing || null)
       .run();
@@ -324,7 +318,7 @@ app.get('/admin/chat-logs', async (c) => {
   const providedKey = c.req.query('key');
   const expectedKey = c.env.ADMIN_API_KEY;
 
-  if (expectedKey && providedKey !== expectedKey) {
+  if (!expectedKey || providedKey !== expectedKey) {
     throw new HTTPException(401, { message: 'Unauthorized' });
   }
 
@@ -378,7 +372,7 @@ app.get('/admin/feedback', async (c) => {
   const providedKey = c.req.query('key');
   const expectedKey = c.env.ADMIN_API_KEY;
 
-  if (expectedKey && providedKey !== expectedKey) {
+  if (!expectedKey || providedKey !== expectedKey) {
     throw new HTTPException(401, { message: 'Unauthorized' });
   }
 
