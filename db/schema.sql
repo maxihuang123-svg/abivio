@@ -1,10 +1,11 @@
 -- D1 Schema for abivio.de MVP
 
+DROP TABLE IF EXISTS chat_logs;
 DROP TABLE IF EXISTS waitlist;
-DROP TABLE IF EXISTS recommendation_feedback;
-DROP TABLE IF EXISTS quiz_sessions;
 DROP TABLE IF EXISTS quiz_answers;
 DROP TABLE IF EXISTS recommendations;
+DROP TABLE IF EXISTS recommendation_feedback;
+DROP TABLE IF EXISTS quiz_sessions;
 DROP TABLE IF EXISTS programs;
 DROP TABLE IF EXISTS universities;
 
