@@ -61,9 +61,232 @@ interface Env {
   AWS_SES_ACCESS_KEY?: string;
   AWS_SES_SECRET_KEY?: string;
   AWS_SES_REGION?: string;
+  // Rate-limit tunables (default values are used if unset)
+  RATE_LIMIT_WAITLIST_PER_HOUR?: string;
+  RATE_LIMIT_QUIZ_PER_HOUR?: string;
+  RATE_LIMIT_FEEDBACK_PER_HOUR?: string;
+  RATE_LIMIT_FEEDBACK_PER_SESSION_HOUR?: string;
+  RATE_LIMIT_CHAT_PER_DAY_IP?: string;
+  RATE_LIMIT_CHAT_PER_DAY_SESSION?: string;
+  // Set to 'true' to enable DNS-MX validation for waitlist/share emails
+  EMAIL_VALIDATE_MX?: string;
 }
 
 const app = new Hono<{ Bindings: Env }>().basePath('/api');
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Security middleware
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Explicit CORS — only abivio domains + local development
+app.use('*', async (c, next) => {
+  const origin = c.req.header('Origin');
+  const allowedOrigins = [
+    'https://abivio.de',
+    'https://www.abivio.de',
+    'https://abivio.pages.dev',
+  ];
+  const isLocal =
+    !origin || origin === 'null' || origin.includes('localhost') || origin.includes('127.0.0.1');
+  const allowOrigin = isLocal || allowedOrigins.includes(origin) ? origin || '*' : 'https://abivio.de';
+
+  c.header('Access-Control-Allow-Origin', allowOrigin);
+  c.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  c.header('Access-Control-Allow-Headers', 'Content-Type');
+  c.header('Access-Control-Max-Age', '86400');
+
+  if (c.req.method === 'OPTIONS') {
+    return c.body(null, 204);
+  }
+
+  await next();
+});
+
+function getClientIP(c: any): string {
+  return (
+    c.req.header('CF-Connecting-IP') ||
+    c.req.header('X-Forwarded-For')?.split(',')[0]?.trim() ||
+    'unknown'
+  );
+}
+
+async function hashIP(ip: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(ip);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+}
+
+interface RateLimitWindow {
+  count: number;
+  resetAt: number;
+}
+
+const memoryRateLimits = new Map<string, RateLimitWindow>();
+
+function isRateLimited(
+  ip: string,
+  route: string,
+  maxRequests: number,
+  windowMs: number,
+  identifier?: string
+): boolean {
+  const key = `${ip}:${route}:${identifier || 'global'}`;
+  const now = Date.now();
+  const entry = memoryRateLimits.get(key);
+
+  if (!entry || now > entry.resetAt) {
+    memoryRateLimits.set(key, { count: 1, resetAt: now + windowMs });
+    return false;
+  }
+
+  if (entry.count >= maxRequests) {
+    return true;
+  }
+
+  entry.count++;
+  return false;
+}
+
+function getRateLimitConfig(c: any) {
+  return {
+    waitlistPerHour: Number(c.env.RATE_LIMIT_WAITLIST_PER_HOUR || 5),
+    quizPerHour: Number(c.env.RATE_LIMIT_QUIZ_PER_HOUR || 10),
+    feedbackPerHour: Number(c.env.RATE_LIMIT_FEEDBACK_PER_HOUR || 10),
+    feedbackPerSessionHour: Number(c.env.RATE_LIMIT_FEEDBACK_PER_SESSION_HOUR || 3),
+    chatPerDayIP: Number(c.env.RATE_LIMIT_CHAT_PER_DAY_IP || 20),
+    chatPerDaySession: Number(c.env.RATE_LIMIT_CHAT_PER_DAY_SESSION || 10),
+  };
+}
+
+async function logAbuse(db: D1Database, ip: string, route: string, event: string, details?: string) {
+  try {
+    const ipHash = await hashIP(ip);
+    await db
+      .prepare('INSERT INTO abuse_logs (ip_hash, route, event, details) VALUES (?, ?, ?, ?)')
+      .bind(ipHash, route, event, details || null)
+      .run();
+  } catch (err) {
+    // Abuse logging must never break the user experience
+    console.error('abuse log error', err);
+  }
+}
+
+async function checkChatBudget(
+  db: D1Database,
+  sessionId: string | undefined,
+  ip: string,
+  dailyLimitIP: number,
+  dailyLimitSession: number
+): Promise<{ allowed: boolean; reason?: string }> {
+  const today = new Date().toISOString().slice(0, 10);
+  const ipHash = await hashIP(ip);
+
+  const { results: ipUsage } = await db
+    .prepare('SELECT COALESCE(SUM(llm_count), 0) as total FROM chat_usage WHERE ip_hash = ? AND usage_date = ?')
+    .bind(ipHash, today)
+    .all<{ total: number }>();
+  const ipTotal = Number(ipUsage?.[0]?.total || 0);
+  if (ipTotal >= dailyLimitIP) {
+    return { allowed: false, reason: 'daily_ip_limit' };
+  }
+
+  if (sessionId) {
+    const { results: sessionUsage } = await db
+      .prepare('SELECT COALESCE(SUM(llm_count), 0) as total FROM chat_usage WHERE session_id = ? AND usage_date = ?')
+      .bind(sessionId, today)
+      .all<{ total: number }>();
+    const sessionTotal = Number(sessionUsage?.[0]?.total || 0);
+    if (sessionTotal >= dailyLimitSession) {
+      return { allowed: false, reason: 'daily_session_limit' };
+    }
+  }
+
+  return { allowed: true };
+}
+
+async function incrementChatUsage(
+  db: D1Database,
+  sessionId: string | undefined,
+  ip: string,
+  source: 'faq' | 'llm' | 'blocked'
+) {
+  const today = new Date().toISOString().slice(0, 10);
+  const ipHash = await hashIP(ip);
+  const column = source === 'llm' ? 'llm_count' : source === 'faq' ? 'faq_count' : 'blocked_count';
+  const sid = sessionId || `ip-${ipHash}`;
+
+  await db
+    .prepare(
+      `INSERT INTO chat_usage (session_id, ip_hash, usage_date, ${column}) VALUES (?, ?, ?, 1)
+       ON CONFLICT(session_id, ip_hash, usage_date) DO UPDATE SET ${column} = ${column} + 1, updated_at = CURRENT_TIMESTAMP`
+    )
+    .bind(sid, ipHash, today)
+    .run();
+}
+
+function isValidEmailFormat(email: string): boolean {
+  const re =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return re.test(email);
+}
+
+async function hasMXRecord(domain: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`,
+      { headers: { Accept: 'application/dns-json' } }
+    );
+    if (!res.ok) return true; // fail open to avoid blocking valid emails on DNS errors
+    const data = (await res.json()) as any;
+    return (data.Answer || []).length > 0;
+  } catch {
+    return true;
+  }
+}
+
+function containsJailbreakAttempt(text: string): boolean {
+  const normalized = text.toLowerCase();
+  const patterns = [
+    'ignore previous instructions',
+    'ignore all previous',
+    'system prompt',
+    'du bist jetzt',
+    'you are now',
+    'pretend you are',
+    'als ob du',
+    'vergiss',
+    'vergiss alle',
+    'rolle als',
+    'role as',
+    'darfst du nicht',
+    'nicht erlaubt',
+    'jetzt antworte',
+    'schreibe jetzt',
+    'antworte jetzt',
+  ];
+  return patterns.some((p) => normalized.includes(p));
+}
+
+function moderateResponse(response: string): boolean {
+  const normalized = response.toLowerCase();
+  const disallowed = [
+    'passwort',
+    'kreditkarte',
+    'kontodaten',
+    'iban',
+    'sozialversicherungsnummer',
+    'personalausweis',
+    'rechtsberatung',
+    'steuerberatung',
+    'medizinische beratung',
+    'therapie',
+    'selbstmord',
+    'suizid',
+  ];
+  return !disallowed.some((p) => normalized.includes(p));
+}
 
 // Health check
 app.get('/health', (c) =>
@@ -76,17 +299,36 @@ app.get('/health', (c) =>
 
 // Waitlist signup
 app.post('/waitlist', async (c) => {
+  const ip = getClientIP(c);
+  const cfg = getRateLimitConfig(c);
+
+  if (isRateLimited(ip, 'waitlist', cfg.waitlistPerHour, 60 * 60 * 1000)) {
+    await logAbuse(c.env.DB, ip, '/api/waitlist', 'rate_limited');
+    throw new HTTPException(429, { message: 'Zu viele Anfragen. Bitte versuche es später erneut.' });
+  }
+
   const { email, graduationYear } = await c.req.json<{ email?: string; graduationYear?: number }>();
 
-  if (!email || !email.includes('@')) {
+  if (!email || !isValidEmailFormat(email)) {
     throw new HTTPException(400, { message: 'Gültige E-Mail-Adresse erforderlich' });
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const domain = normalizedEmail.split('@')[1];
+
+  // Optional DNS-MX validation; fail open if DNS lookup errors
+  if (c.env.EMAIL_VALIDATE_MX === 'true') {
+    const mxValid = await hasMXRecord(domain);
+    if (!mxValid) {
+      throw new HTTPException(400, { message: 'E-Mail-Domain scheint ungültig zu sein' });
+    }
   }
 
   try {
     await c.env.DB.prepare(
       `INSERT INTO waitlist (email, graduation_year) VALUES (?, ?) ON CONFLICT(email) DO UPDATE SET graduation_year = excluded.graduation_year`
     )
-      .bind(email, graduationYear || null)
+      .bind(normalizedEmail, graduationYear || null)
       .run();
 
     return c.json({ success: true, message: 'Du stehst auf der Warteliste.' });
@@ -134,6 +376,14 @@ app.post('/quiz', async (c) => {
 
   if (!sessionId || !answers) {
     throw new HTTPException(400, { message: 'Session-ID und Antworten erforderlich' });
+  }
+
+  const ip = getClientIP(c);
+  const cfg = getRateLimitConfig(c);
+
+  if (isRateLimited(ip, 'quiz', cfg.quizPerHour, 60 * 60 * 1000, sessionId)) {
+    await logAbuse(c.env.DB, ip, '/api/quiz', 'rate_limited', `session=${sessionId}`);
+    throw new HTTPException(429, { message: 'Zu viele Quiz-Versuche. Bitte versuche es später erneut.' });
   }
 
   const db = c.env.DB;
@@ -194,6 +444,17 @@ app.post('/feedback', async (c) => {
     throw new HTTPException(400, { message: 'session_id erforderlich' });
   }
 
+  const ip = getClientIP(c);
+  const cfg = getRateLimitConfig(c);
+
+  if (
+    isRateLimited(ip, 'feedback', cfg.feedbackPerHour, 60 * 60 * 1000) ||
+    isRateLimited(ip, 'feedback', cfg.feedbackPerSessionHour, 60 * 60 * 1000, sessionId)
+  ) {
+    await logAbuse(c.env.DB, ip, '/api/feedback', 'rate_limited', `session=${sessionId}`);
+    throw new HTTPException(429, { message: 'Zu viele Feedback-Versuche. Bitte versuche es später erneut.' });
+  }
+
   // Validate ranges
   if (helpfulness !== undefined && (helpfulness < 1 || helpfulness > 5)) {
     throw new HTTPException(400, { message: 'helpfulness muss zwischen 1 und 5 liegen' });
@@ -229,8 +490,16 @@ app.post('/share/email', async (c) => {
   if (!sessionId) {
     throw new HTTPException(400, { message: 'session_id erforderlich' });
   }
-  if (!email || !email.includes('@')) {
+  if (!email || !isValidEmailFormat(email)) {
     throw new HTTPException(400, { message: 'Gültige E-Mail-Adresse erforderlich' });
+  }
+
+  const domain = email.split('@')[1];
+  if (c.env.EMAIL_VALIDATE_MX === 'true') {
+    const mxValid = await hasMXRecord(domain);
+    if (!mxValid) {
+      throw new HTTPException(400, { message: 'E-Mail-Domain scheint ungültig zu sein' });
+    }
   }
 
   const recommendations = await fetchRecommendations(c.env.DB, sessionId);
@@ -295,12 +564,17 @@ app.get('/recommendations', async (c) => {
 
 // Chat endpoint powered by Cloudflare Workers AI
 app.post('/chat', async (c) => {
+  const ip = getClientIP(c);
+  const cfg = getRateLimitConfig(c);
+
   const body = await c.req.json<{
     messages?: Array<{ role: string; content: string }>;
     consent?: boolean;
+    session_id?: string;
   }>();
   const messages = body.messages || [];
   const consent = body.consent === true;
+  const sessionId = body.session_id;
 
   if (messages.length === 0) {
     throw new HTTPException(400, { message: 'Mindestens eine Nachricht erforderlich' });
@@ -312,11 +586,40 @@ app.post('/chat', async (c) => {
   }
 
   const userQuestion = lastMessage.content.trim();
+  const fullConversationText = messages.map((m) => m.content).join(' ');
+
+  // Detect prompt-injection / jailbreak attempts early
+  if (containsJailbreakAttempt(fullConversationText)) {
+    const blockedResponse =
+      'Ich kann diese Anfrage nicht bearbeiten. Stell mir gerne eine Frage zur Studienwahl in Deutschland.';
+    await logChatQuestion(c.env.DB, userQuestion, blockedResponse, 'blocked', null, consent);
+    await incrementChatUsage(c.env.DB, sessionId, ip, 'blocked');
+    await logAbuse(c.env.DB, ip, '/api/chat', 'jailbreak_attempt');
+    return c.json({
+      response: blockedResponse,
+      model: 'topic-filter',
+      cached: true,
+    });
+  }
+
+  // Daily chat budget per IP and optional per session
+  const budgetCheck = await checkChatBudget(c.env.DB, sessionId, ip, cfg.chatPerDayIP, cfg.chatPerDaySession);
+  if (!budgetCheck.allowed) {
+    const budgetResponse =
+      'Du hast dein tägliches Chat-Limit erreicht. Komm morgen wieder oder schau dir deine Studiengang-Empfehlungen an.';
+    await logAbuse(c.env.DB, ip, '/api/chat', 'budget_exceeded', budgetCheck.reason);
+    return c.json({
+      response: budgetResponse,
+      model: 'limit',
+      cached: true,
+    });
+  }
 
   // 1. Regelbasierte FAQ-Abkürzung: günstig, schnell, deterministisch
   const shortcut = getFaqShortcut(userQuestion);
   if (shortcut) {
     await logChatQuestion(c.env.DB, userQuestion, shortcut, 'faq', null, consent);
+    await incrementChatUsage(c.env.DB, sessionId, ip, 'faq');
     return c.json({
       response: shortcut,
       model: 'faq-shortcut',
@@ -329,6 +632,7 @@ app.post('/chat', async (c) => {
     const offTopicResponse =
       'Ich bin dein Studienberater für die Studienwahl in Deutschland. Stell mir gerne Fragen zu Studiengängen, NCs, Bewerbung, Uni vs. FH oder Bewerbungsfristen.';
     await logChatQuestion(c.env.DB, userQuestion, offTopicResponse, 'blocked', null, consent);
+    await incrementChatUsage(c.env.DB, sessionId, ip, 'blocked');
     return c.json({
       response: offTopicResponse,
       model: 'topic-filter',
@@ -365,7 +669,22 @@ Wenn dir eine Frage zu spezifisch ist, verweise höflich auf offizielle Quellen 
         ? result
         : (result as any).response || (result as any).text || 'Entschuldigung, ich konnte keine Antwort generieren.';
 
+    // 5. Output moderation: block responses that leak into disallowed areas
+    if (!moderateResponse(responseText)) {
+      const moderatedResponse =
+        'Entschuldigung, ich kann diese Anfrage nicht beantworten. Bitte stell eine Frage zur Studienwahl in Deutschland.';
+      await logChatQuestion(c.env.DB, userQuestion, moderatedResponse, 'blocked', modelName, consent);
+      await incrementChatUsage(c.env.DB, sessionId, ip, 'blocked');
+      await logAbuse(c.env.DB, ip, '/api/chat', 'output_moderated');
+      return c.json({
+        response: moderatedResponse,
+        model: 'output-moderation',
+        cached: false,
+      });
+    }
+
     await logChatQuestion(c.env.DB, userQuestion, responseText, 'llm', modelName, consent);
+    await incrementChatUsage(c.env.DB, sessionId, ip, 'llm');
 
     return c.json({
       response: responseText,
@@ -1031,7 +1350,7 @@ class ResendEmailProvider implements EmailProvider {
     if (!response.ok) {
       const errText = await response.text();
       console.error('resend error', response.status, errText);
-      throw new HTTPException(502, { message: 'E-Mail konnte nicht versendet werden.' });
+      throw new HTTPException(502, { message: `E-Mail konnte nicht versendet werden: ${response.status} ${errText.slice(0, 200)}` });
     }
   }
 }
