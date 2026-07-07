@@ -17,5 +17,16 @@ binding = "AI"
 ENVIRONMENT = "production"
 
 # Secrets (set via `wrangler secret put NAME`):
-# - OPENAI_API_KEY (future LLM feature)
-# - RESEND_API_KEY (future email feature)
+# - ADMIN_API_KEY        (required: protect /api/admin/* endpoints; rotate regularly)
+# - RESEND_API_KEY       (email provider; optional until email feature is active)
+# - BREVO_API_KEY        (alternative email provider)
+# - SENDGRID_API_KEY     (alternative email provider)
+#
+# Optional environment variables (set via `wrangler pages deployment tail` or `wrangler secret`):
+# - EMAIL_VALIDATE_MX=true            enable DNS-MX validation for waitlist/share emails
+# - RATE_LIMIT_WAITLIST_PER_HOUR=5    waitlist signups per IP per hour
+# - RATE_LIMIT_QUIZ_PER_HOUR=10       quiz submissions per IP per hour
+# - RATE_LIMIT_FEEDBACK_PER_HOUR=10   feedback submissions per IP per hour
+# - RATE_LIMIT_FEEDBACK_PER_SESSION_HOUR=3  feedback per session per hour
+# - RATE_LIMIT_CHAT_PER_DAY_IP=20     LLM chat calls per IP per day
+# - RATE_LIMIT_CHAT_PER_DAY_SESSION=10 LLM chat calls per session per day

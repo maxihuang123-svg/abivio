@@ -15,6 +15,13 @@
   let isLoading = false;
   let consent = localStorage.getItem('abivio_chat_consent') === 'true';
   let consentAsked = localStorage.getItem('abivio_chat_consent') !== null;
+  let chatSessionId = localStorage.getItem('abivio_chat_session_id') || generateChatSessionId();
+
+  function generateChatSessionId() {
+    const id = 'av_chat_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('abivio_chat_session_id', id);
+    return id;
+  }
 
   // Initialize
   if (!chatWidget || !chatToggle || !chatClose || !chatForm || !chatInput || !chatMessages) {
@@ -88,7 +95,7 @@
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, consent }),
+        body: JSON.stringify({ messages, consent, session_id: chatSessionId }),
       });
 
       const data = await res.json();

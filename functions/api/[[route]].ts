@@ -180,27 +180,32 @@ async function checkChatBudget(
   dailyLimitIP: number,
   dailyLimitSession: number
 ): Promise<{ allowed: boolean; reason?: string }> {
-  const today = new Date().toISOString().slice(0, 10);
-  const ipHash = await hashIP(ip);
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const ipHash = await hashIP(ip);
 
-  const { results: ipUsage } = await db
-    .prepare('SELECT COALESCE(SUM(llm_count), 0) as total FROM chat_usage WHERE ip_hash = ? AND usage_date = ?')
-    .bind(ipHash, today)
-    .all<{ total: number }>();
-  const ipTotal = Number(ipUsage?.[0]?.total || 0);
-  if (ipTotal >= dailyLimitIP) {
-    return { allowed: false, reason: 'daily_ip_limit' };
-  }
-
-  if (sessionId) {
-    const { results: sessionUsage } = await db
-      .prepare('SELECT COALESCE(SUM(llm_count), 0) as total FROM chat_usage WHERE session_id = ? AND usage_date = ?')
-      .bind(sessionId, today)
+    const { results: ipUsage } = await db
+      .prepare('SELECT COALESCE(SUM(llm_count), 0) as total FROM chat_usage WHERE ip_hash = ? AND usage_date = ?')
+      .bind(ipHash, today)
       .all<{ total: number }>();
-    const sessionTotal = Number(sessionUsage?.[0]?.total || 0);
-    if (sessionTotal >= dailyLimitSession) {
-      return { allowed: false, reason: 'daily_session_limit' };
+    const ipTotal = Number(ipUsage?.[0]?.total || 0);
+    if (ipTotal >= dailyLimitIP) {
+      return { allowed: false, reason: 'daily_ip_limit' };
     }
+
+    if (sessionId) {
+      const { results: sessionUsage } = await db
+        .prepare('SELECT COALESCE(SUM(llm_count), 0) as total FROM chat_usage WHERE session_id = ? AND usage_date = ?')
+        .bind(sessionId, today)
+        .all<{ total: number }>();
+      const sessionTotal = Number(sessionUsage?.[0]?.total || 0);
+      if (sessionTotal >= dailyLimitSession) {
+        return { allowed: false, reason: 'daily_session_limit' };
+      }
+    }
+  } catch (err) {
+    // Fail open if budget table is missing/unreachable so chat keeps working
+    console.error('chat budget check error', err);
   }
 
   return { allowed: true };
@@ -212,18 +217,23 @@ async function incrementChatUsage(
   ip: string,
   source: 'faq' | 'llm' | 'blocked'
 ) {
-  const today = new Date().toISOString().slice(0, 10);
-  const ipHash = await hashIP(ip);
-  const column = source === 'llm' ? 'llm_count' : source === 'faq' ? 'faq_count' : 'blocked_count';
-  const sid = sessionId || `ip-${ipHash}`;
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const ipHash = await hashIP(ip);
+    const column = source === 'llm' ? 'llm_count' : source === 'faq' ? 'faq_count' : 'blocked_count';
+    const sid = sessionId || `ip-${ipHash}`;
 
-  await db
-    .prepare(
-      `INSERT INTO chat_usage (session_id, ip_hash, usage_date, ${column}) VALUES (?, ?, ?, 1)
-       ON CONFLICT(session_id, ip_hash, usage_date) DO UPDATE SET ${column} = ${column} + 1, updated_at = CURRENT_TIMESTAMP`
-    )
-    .bind(sid, ipHash, today)
-    .run();
+    await db
+      .prepare(
+        `INSERT INTO chat_usage (session_id, ip_hash, usage_date, ${column}) VALUES (?, ?, ?, 1)
+         ON CONFLICT(session_id, ip_hash, usage_date) DO UPDATE SET ${column} = ${column} + 1, updated_at = CURRENT_TIMESTAMP`
+      )
+      .bind(sid, ipHash, today)
+      .run();
+  } catch (err) {
+    // Usage tracking must never break the chat experience
+    console.error('chat usage increment error', err);
+  }
 }
 
 function isValidEmailFormat(email: string): boolean {
@@ -805,6 +815,57 @@ app.get('/admin/feedback', async (c) => {
   });
 });
 
+// Admin endpoint to review abuse events (rate limits, jailbreaks, budget exceeded)
+app.get('/admin/abuse', async (c) => {
+  const providedKey = c.req.query('key');
+  const expectedKey = c.env.ADMIN_API_KEY;
+
+  if (!expectedKey || providedKey !== expectedKey) {
+    throw new HTTPException(401, { message: 'Unauthorized' });
+  }
+
+  const { results } = await c.env.DB
+    .prepare(
+      `SELECT
+        event,
+        route,
+        COUNT(*) as count,
+        MAX(created_at) as last_seen
+       FROM abuse_logs
+       WHERE created_at > datetime('now', '-7 days')
+       GROUP BY event, route
+       ORDER BY count DESC`
+    )
+    .all<{
+      event: string;
+      route: string | null;
+      count: number;
+      last_seen: string;
+    }>();
+
+  const recent = await c.env.DB
+    .prepare(
+      `SELECT id, ip_hash, route, event, details, created_at
+       FROM abuse_logs
+       ORDER BY created_at DESC
+       LIMIT 100`
+    )
+    .all<{
+      id: number;
+      ip_hash: string | null;
+      route: string | null;
+      event: string;
+      details: string | null;
+      created_at: string;
+    }>();
+
+  return c.json({
+    summary: results || [],
+    recent: recent.results || [],
+    note: 'IP hashes are SHA-256 truncated; no raw IP addresses are stored.',
+  });
+});
+
 async function logChatQuestion(
   db: D1Database,
   question: string,
@@ -943,6 +1004,21 @@ function isQuestionAllowed(question: string): boolean {
     'wie alt ist',
     'wie viel uhr',
     'welcher tag ist heute',
+    // Prompt-injection / jailbreak markers
+    'ignore previous instructions',
+    'ignore all previous',
+    'system prompt',
+    'du bist jetzt',
+    'you are now',
+    'pretend you are',
+    'vergiss alle',
+    'vergiss deine',
+    'rolle als',
+    'role as',
+    'darfst du nicht',
+    'nicht erlaubt',
+    'schreibe jetzt',
+    'antworte jetzt',
   ];
 
   for (const pattern of blockedPatterns) {

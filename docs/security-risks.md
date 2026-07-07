@@ -1,7 +1,7 @@
 # Sicherheitsrisiken & Abuse-Potenzial — abivio.de
 
 > Bearbeitbare Übersicht der aktuellen Risiken, offenen Maßnahmen und Architekturentscheidungen.
-> Letzte Aktualisierung: 2026-07-07
+> Letzte Aktualisierung: 2026-07-08
 
 ---
 
@@ -84,17 +84,17 @@ Der Admin-Key ist ein geheimes Token, mit dem administrative Endpoints aufgerufe
 
 | # | Risiko | Schwere | Wahrscheinlichkeit | Status | Gegenmaßnahme | Verantwortlich |
 |---|---|---|---|---|---|---|
-| 1 | Admin-Endpoints ohne Key zugänglich | Hoch | Hoch | ✅ Behoben | Key-Pflicht `if (!expectedKey || providedKey !== expectedKey)` | — |
-| 2 | Spam in Waitlist durch fehlendes Rate-Limit | Mittel | Mittel | ⏳ Offen | Cloudflare Rate Limiting oder pro-IP-Limit im Code | Offen |
-| 3 | Quiz-Spam füllt Datenbank | Mittel | Niedrig | ⏳ Offen | Rate-Limit pro Session/IP; alte Sessions aufräumen | Offen |
-| 4 | Feedback-Spam / Manipulation | Mittel | Mittel | ⏳ Offen | Rate-Limit pro Session; Freitext ggf. moderieren | Offen |
-| 5 | Chat-Kosten durch unbegrenzte LLM-Nutzung | Hoch | Mittel | ⚠️ Teils offen | Max. 5 Nachrichten Verlauf, max. 350 Tokens; fehlt: tägliches Budget pro Session | Offen |
-| 6 | Topic-Filter wird umgangen | Mittel | Niedrig | ⏳ Offen | Strengere Prompts / Output-Moderation | Offen |
-| 7 | Cloudflare Analytics Token ist Platzhalter | Niedrig | Hoch | ⏳ Offen | `DEIN_TOKEN` durch echten Token ersetzen | Offen |
-| 8 | Admin-Key-Leak | Hoch | Niedrig | ⏳ Offen | Key regelmäßig rotieren; nicht teilen | Offen |
-| 9 | Offene CORS-Konfiguration | Niedrig | Niedrig | ⏳ Offen | Explizite CORS-Headers setzen, falls API extern genutzt wird | Offen |
-| 10 | Keine Logging/Monitoring für Abuse | Mittel | Mittel | ⏳ Offen | Cloudflare Logs / WAF-Regeln aktivieren | Offen |
-| 11 | E-Mail-Validierung zu schwach | Mittel | Mittel | ⏳ Offen | DNS-MX-Check oder Double-Opt-in für Waitlist | Offen |
+| 1 | Admin-Endpoints ohne Key zugänglich | Hoch | Hoch | ✅ Behoben | Key-Pflicht `if (!expectedKey \|\| providedKey !== expectedKey)` | — |
+| 2 | Spam in Waitlist durch fehlendes Rate-Limit | Mittel | Mittel | ✅ Behoben | In-Memory pro-IP-Limit + DNS-MX-Check in `/api/waitlist` | — |
+| 3 | Quiz-Spam füllt Datenbank | Mittel | Niedrig | ✅ Behoben | In-Memory pro-IP/Session-Limit in `/api/quiz` | — |
+| 4 | Feedback-Spam / Manipulation | Mittel | Mittel | ✅ Behoben | In-Memory pro-IP + pro-Session-Limit in `/api/feedback` | — |
+| 5 | Chat-Kosten durch unbegrenzte LLM-Nutzung | Hoch | Mittel | ✅ Behoben | Tägliches Budget pro IP/Session in D1 (`chat_usage`), Max. 5 Nachrichten, max. 350 Tokens | — |
+| 6 | Topic-Filter wird umgangen | Mittel | Niedrig | ✅ Behoben | Jailbreak-Erkennung, erweiterte Blocklisten, Output-Moderation nach LLM-Antwort | — |
+| 7 | Cloudflare Analytics Token ist Platzhalter | Niedrig | Hoch | ⚠️ Teils offen | Kommentar in `index.html`; Token muss im Cloudflare Dashboard generiert und eingetragen werden | Offen |
+| 8 | Admin-Key-Leak | Hoch | Niedrig | ⚠️ Teils offen | Key in `wrangler secret` halten, regelmäßig rotieren, Admin-Endpoint `/api/admin/abuse` für Monitoring | Offen |
+| 9 | Offene CORS-Konfiguration | Niedrig | Niedrig | ✅ Behoben | Explizite CORS-Headers nur für abivio-Domains + localhost | — |
+| 10 | Keine Logging/Monitoring für Abuse | Mittel | Mittel | ✅ Behoben | `abuse_logs`-Tabelle, Admin-Endpoint `/api/admin/abuse`, Rate-Limit-Events werden geloggt | — |
+| 11 | E-Mail-Validierung zu schwach | Mittel | Mittel | ✅ Behoben | Strikte Regex + optionaler DNS-MX-Check für Waitlist/E-Mail-Share | — |
 | 12 | Session-ID ist clientseitig generiert | Niedrig | Mittel | ⚠️ Akzeptiert | Genügt für MVP; bei Accounts durch Server-Token ersetzen | Offen |
 
 ---
@@ -102,19 +102,20 @@ Der Admin-Key ist ein geheimes Token, mit dem administrative Endpoints aufgerufe
 ## 6. Empfohlene Priorisierung
 
 ### Sofort (vor/nach Launch)
-1. Cloudflare Web Analytics Token ersetzen.
-2. Grundlegendes Rate Limiting über Cloudflare Dashboard aktivieren.
-3. Admin-Key an einem sicheren Ort hinterlegen.
+1. Cloudflare Web Analytics Token ersetzen (`index.html` → `data-cf-beacon='{"token": "DEIN_TOKEN"}'`).
+2. `ADMIN_API_KEY` per `wrangler secret put ADMIN_API_KEY` setzen und an einem sicheren Ort hinterlegen.
+3. Migration `db/migration_006_security_rate_limits.sql` auf D1 ausführen.
+4. (Optional) `EMAIL_VALIDATE_MX=true` aktivieren, um DNS-MX-Checks für Waitlist/E-Mail-Share zu erzwingen.
 
 ### Kurzfristig (1–2 Wochen nach Launch)
-4. Chat-Budget pro Session/Tag einführen.
-5. Feedback-Freitexte regelmäßig prüfen.
-6. Erste 20–30 Nutzerinterviews oder Umfragen durchführen.
+5. Admin-Key rotieren und alte Keys ungültig machen.
+6. Feedback-Freitexte regelmäßig prüfen.
+7. Erste 20–30 Nutzerinterviews oder Umfragen durchführen.
 
 ### Mittelfristig (nach ersten Erkenntnissen)
-7. Entscheidung: Account/Magic Link ja/nein.
-8. Entscheidung: Empfehlungen per E-Mail/Link teilbar machen.
-9. Echte Monitoring-Lösung für Abuse.
+8. Entscheidung: Account/Magic Link ja/nein.
+9. Entscheidung: Empfehlungen per E-Mail/Link teilbar machen.
+10. Erweitertes Cloudflare-Monitoring (WAF, Bot Management) aktivieren.
 
 ---
 
@@ -122,5 +123,7 @@ Der Admin-Key ist ein geheimes Token, mit dem administrative Endpoints aufgerufe
 
 - Alle API-Inputs werden über parameterized queries an D1 gebunden — SQL-Injection ist aktuell kein Risiko.
 - Keine IP-Adressen, E-Mails oder personenbezogenen Daten werden in Feedback/Chat-Logs gespeichert.
+- Für Abuse-Monitoring werden **gehashte** IP-Adressen (SHA-256, truncated) in `chat_usage` und `abuse_logs` gespeichert — keine Roh-IPs.
 - Die `session_id` ist eine zufällige Zeichenfolge und dient nur der Verknüpfung von Quiz, Empfehlungen und Feedback.
 - Admin-Zugriff ist nur mit `ADMIN_API_KEY` möglich.
+- Rate-Limiting läuft aktuell im Worker-Speicher (pro Isolate). Für produktiven Schutz vor verteilten Angriffen sollte zusätzlich Cloudflare Rate Limiting im Dashboard aktiviert werden.
