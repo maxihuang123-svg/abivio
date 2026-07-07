@@ -1,0 +1,60 @@
+-- Remove programs that are Master-only, invalid, or not offered as Bachelor degrees in Germany.
+-- Also removes recommendations that pointed to those programs.
+-- Safe to run while the site is in under-construction mode.
+
+DELETE FROM recommendations
+WHERE program_id IN (
+  SELECT id FROM programs
+  WHERE name LIKE 'Hüttenwesen%'
+     OR name LIKE 'Robotik%'
+     OR name LIKE 'Cloud Computing%'
+     OR name LIKE 'Blockchain-Technologie%'
+     OR name LIKE 'Human-Computer Interaction%'
+     OR name LIKE 'Data Engineering%'
+     OR name LIKE 'Machine Learning%'
+     OR name LIKE 'Bergbau%'
+     OR name LIKE 'Raumfahrttechnik%'
+     OR name LIKE 'Tiefbau%'
+     OR name LIKE 'Wasserwesen%'
+     OR name LIKE 'Gebäudetechnik%'
+     OR name LIKE 'Feinwerktechnik%'
+     OR name LIKE 'Schiffbau%'
+     OR name LIKE 'Optotechnik%'
+     OR name LIKE 'Möbeldesign%'
+     OR name LIKE 'Radiojournalismus%'
+     OR name LIKE 'Fernsehjournalismus%'
+     OR name LIKE 'Crossmedia%'
+     OR name LIKE 'Gemeindediakonie%'
+     OR name LIKE 'Nonprofit-Management%'
+     OR name LIKE 'Schauspiel%'
+     OR name LIKE 'Regie%'
+     OR name LIKE 'Tanz%'
+     OR name LIKE 'Fotografie%'
+);
+
+DELETE FROM programs
+WHERE name LIKE 'Hüttenwesen%'
+   OR name LIKE 'Robotik%'
+   OR name LIKE 'Cloud Computing%'
+   OR name LIKE 'Blockchain-Technologie%'
+   OR name LIKE 'Human-Computer Interaction%'
+   OR name LIKE 'Data Engineering%'
+   OR name LIKE 'Machine Learning%'
+   OR name LIKE 'Bergbau%'
+   OR name LIKE 'Raumfahrttechnik%'
+   OR name LIKE 'Tiefbau%'
+   OR name LIKE 'Wasserwesen%'
+   OR name LIKE 'Gebäudetechnik%'
+   OR name LIKE 'Feinwerktechnik%'
+   OR name LIKE 'Schiffbau%'
+   OR name LIKE 'Optotechnik%'
+   OR name LIKE 'Möbeldesign%'
+   OR name LIKE 'Radiojournalismus%'
+   OR name LIKE 'Fernsehjournalismus%'
+   OR name LIKE 'Crossmedia%'
+   OR name LIKE 'Gemeindediakonie%'
+   OR name LIKE 'Nonprofit-Management%'
+   OR name LIKE 'Schauspiel%'
+   OR name LIKE 'Regie%'
+   OR name LIKE 'Tanz%'
+   OR name LIKE 'Fotografie%';
