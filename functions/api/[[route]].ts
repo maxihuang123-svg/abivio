@@ -52,6 +52,8 @@ interface Env {
   EMAIL_FROM?: string;
   // Provider-specific API keys
   RESEND_API_KEY?: string;
+  RESEND_API_TOKEN?: string;
+  RESEND_TOKEN?: string;
   BREVO_API_KEY?: string;
   SENDGRID_API_KEY?: string;
   AWS_SES_ACCESS_KEY?: string;
@@ -235,7 +237,10 @@ app.post('/share/email', async (c) => {
 
   const provider = createEmailProvider(c.env);
   if (!provider) {
-    throw new HTTPException(503, { message: 'E-Mail-Versand ist aktuell nicht konfiguriert.' });
+    const configuredProvider = (c.env.EMAIL_PROVIDER || 'resend').toLowerCase();
+    throw new HTTPException(503, {
+      message: `E-Mail-Versand ist aktuell nicht konfiguriert.`,
+    });
   }
 
   try {
@@ -977,8 +982,11 @@ function createEmailProvider(env: Env): EmailProvider | null {
   const provider = (env.EMAIL_PROVIDER || 'resend').toLowerCase();
 
   switch (provider) {
-    case 'resend':
-      return env.RESEND_API_KEY ? new ResendEmailProvider(env.RESEND_API_KEY, getDefaultFrom(env)) : null;
+    case 'resend': {
+      // Cloudflare Resend integration may use different binding names
+      const key = env.RESEND_API_KEY || env.RESEND_API_TOKEN || env.RESEND_TOKEN;
+      return key ? new ResendEmailProvider(key, getDefaultFrom(env)) : null;
+    }
     case 'brevo':
       return env.BREVO_API_KEY ? new BrevoEmailProvider(env.BREVO_API_KEY, getDefaultFrom(env)) : null;
     case 'sendgrid':
