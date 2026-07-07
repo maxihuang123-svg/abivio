@@ -110,6 +110,27 @@
         { value: 'egal', label: 'Keine Präferenz' },
       ],
     },
+    {
+      key: 'preferred_university',
+      title: 'Gibt es eine Universität, die du besonders bevorzugst?',
+      subtitle: 'Wir priorisieren dann Studiengänge an dieser Uni.',
+      type: 'single',
+      options: [
+        { value: 'München', label: 'München (TUM / LMU)' },
+        { value: 'Berlin', label: 'Berlin (FU / HU / TU)' },
+        { value: 'Heidelberg', label: 'Uni Heidelberg' },
+        { value: 'Köln', label: 'Uni Köln' },
+        { value: 'Hamburg', label: 'Uni Hamburg' },
+        { value: 'Aachen', label: 'RWTH Aachen' },
+        { value: 'Karlsruhe', label: 'KIT Karlsruhe' },
+        { value: 'Frankfurt', label: 'Goethe-Universität Frankfurt' },
+        { value: 'Mannheim', label: 'Uni Mannheim' },
+        { value: 'Tübingen', label: 'Uni Tübingen' },
+        { value: 'Freiburg', label: 'Uni Freiburg' },
+        { value: 'Göttingen', label: 'Uni Göttingen' },
+        { value: '', label: 'Keine Präferenz' },
+      ],
+    },
   ];
 
   let currentQuestion = 0;
@@ -127,6 +148,12 @@
   const resultsSection = document.getElementById('results');
   const resultsList = document.getElementById('results-list');
   const retakeBtn = document.getElementById('retake-quiz');
+  const feedbackArea = document.getElementById('feedback-area');
+  const feedbackForm = document.getElementById('feedback-form');
+  const feedbackSessionId = document.getElementById('feedback-session-id');
+  const feedbackMessage = document.getElementById('feedback-message');
+  const helpfulnessStars = document.getElementById('helpfulness-stars');
+  const helpfulnessHint = document.getElementById('helpfulness-hint');
 
   // Initialize
   renderQuestion(currentQuestion);
@@ -318,6 +345,7 @@
 
     if (!recommendations || recommendations.length === 0) {
       resultsList.innerHTML = '<p>Leider konnten wir keine passenden Empfehlungen finden. Versuche es mit anderen Antworten.</p>';
+      feedbackArea.hidden = true;
       return;
     }
 
@@ -328,6 +356,11 @@
       const ncText = rec.nc_required
         ? `NC: ca. ${rec.nc_grade?.toFixed(1).replace('.', ',') || 'k.A.'}`
         : 'Ohne NC';
+
+      const uniText = rec.university_name ? `${escapeHtml(rec.university_name)}` : '';
+      const deadlineText = rec.application_deadline_winter
+        ? `Bewerbung bis ${formatDate(rec.application_deadline_winter)}`
+        : '';
 
       card.innerHTML = `
         <div class="result-header">
@@ -341,11 +374,103 @@
           <span class="tag">${rec.language === 'en' ? 'Englisch' : rec.language === 'de/en' ? 'Deutsch/Englisch' : 'Deutsch'}</span>
           <span class="tag">${ncText}</span>
         </div>
+        ${uniText ? `<p class="result-university"><strong>Universität:</strong> ${uniText}</p>` : ''}
+        ${deadlineText ? `<p class="result-deadline">${deadlineText}</p>` : ''}
         <p class="result-description">${escapeHtml(rec.description)}</p>
         <p class="result-reasoning">${escapeHtml(rec.reasoning)}</p>
         <p class="result-career"><strong>Berufsperspektiven:</strong> ${escapeHtml(rec.career)}</p>
       `;
       resultsList.appendChild(card);
+    });
+
+    // Reset and show feedback form
+    resetFeedbackForm();
+    feedbackSessionId.value = sessionId;
+    feedbackArea.hidden = false;
+  }
+
+  // Feedback star rating
+  let selectedHelpfulness = null;
+  if (helpfulnessStars) {
+    const starButtons = helpfulnessStars.querySelectorAll('button');
+    const labels = ['Nicht hilfreich', 'Eher wenig hilfreich', 'Mittelmäßig', 'Hilfreich', 'Sehr hilfreich'];
+
+    starButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const value = Number(btn.dataset.value);
+        selectedHelpfulness = value;
+        starButtons.forEach((b) => {
+          b.classList.toggle('selected', Number(b.dataset.value) <= value);
+        });
+        helpfulnessHint.textContent = labels[value - 1];
+      });
+    });
+  }
+
+  function resetFeedbackForm() {
+    if (feedbackForm) {
+      feedbackForm.reset();
+      feedbackForm.querySelectorAll('input, textarea, button').forEach((el) => {
+        el.disabled = false;
+      });
+    }
+    selectedHelpfulness = null;
+    if (helpfulnessStars) {
+      helpfulnessStars.querySelectorAll('button').forEach((b) => b.classList.remove('selected'));
+    }
+    if (helpfulnessHint) {
+      helpfulnessHint.textContent = 'Tippe auf einen Stern';
+    }
+    if (feedbackMessage) {
+      feedbackMessage.textContent = '';
+      feedbackMessage.className = 'form-message';
+    }
+  }
+
+  function showFeedbackMessage(text, type) {
+    feedbackMessage.textContent = text;
+    feedbackMessage.className = `form-message ${type}`;
+  }
+
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(feedbackForm);
+      const payload = {
+        session_id: formData.get('session_id'),
+        helpfulness: selectedHelpfulness,
+        found_match: formData.get('found_match') || undefined,
+        nps: formData.get('nps') ? Number(formData.get('nps')) : undefined,
+        missing: formData.get('missing') || undefined,
+      };
+
+      // Remove undefined values to keep it minimal
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
+          delete payload[key];
+        }
+      });
+
+      try {
+        const res = await fetch(`${API_BASE}/api/feedback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          showFeedbackMessage(data.message, 'success');
+          feedbackArea.querySelectorAll('input, textarea, button').forEach((el) => {
+            el.disabled = true;
+          });
+        } else {
+          showFeedbackMessage(data.error || 'Fehler beim Senden.', 'error');
+        }
+      } catch (err) {
+        showFeedbackMessage('Netzwerkfehler. Bitte später erneut versuchen.', 'error');
+      }
     });
   }
 
@@ -354,6 +479,13 @@
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return dateString;
+    return `${parts[2]}.${parts[1]}.${parts[0]}`;
   }
 
   function generateSessionId() {
@@ -368,6 +500,7 @@
       Object.keys(answers).forEach((k) => delete answers[k]);
       sessionId = generateSessionId();
       resultsSection.hidden = true;
+      feedbackArea.hidden = true;
       quizForm.hidden = false;
       quizProgress.hidden = false;
       renderQuestion(0);

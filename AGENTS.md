@@ -47,6 +47,8 @@ wrangler.toml     -> Cloudflare-Konfiguration (inkl. AI-Binding)
 - `POST /api/waitlist` — E-Mail für Waitlist speichern
 - `POST /api/quiz` — Quiz-Antworten speichern und Empfehlungen berechnen
 - `GET /api/recommendations?session_id=...` — Empfehlungen abrufen
+- `POST /api/feedback` — Feedback zu Empfehlungen speichern (Sterne, Match, NPS, Freitext)
+- `GET /api/admin/feedback?key=...` — Zusammenfassung des Empfehlungs-Feedbacks (Admin)
 - `GET /api/programs` — Liste aller Studiengänge (für interne Zwecke)
 - `POST /api/chat` — Studienberater-Chatbot (Cloudflare Workers AI mit FAQ-Shortcuts)
 
@@ -64,6 +66,13 @@ wrangler.toml     -> Cloudflare-Konfiguration (inkl. AI-Binding)
 - Mobile-first CSS mit CSS-Variablen für Branding.
 - Keine Hardcoded Secrets — Umgebungsvariablen über `wrangler secret`.
 - Deutsche Sprache im UI, Code auf Englisch.
+
+## Datensammlung & Feedback-Strategie
+- **Primärziel im MVP:** Verstehen, ob Empfehlungen hilfreich sind und was fehlt.
+- **Feedback-Formular nach Empfehlungen:** Sterne-Bewertung (1–5), Match-Frage (ja/teilweise/nein), NPS (0–10), offener Freitext. Optional, anonym, verknüpft mit `session_id`.
+- **Admin-Auswertung:** `GET /api/admin/feedback?key=...` liefert Durchschnittswerte und letzte 100 Einträge.
+- **Analytics:** Cloudflare Web Analytics für Seitenaufrufe; eigene D1-Tabellen für Quiz-Abschlüsse, Chat-Logs und Feedback. Keine Tracking-Cookies oder Drittanbieter-Pixel im MVP.
+- **Datenschutz:** Keine IP/E-Mail/Sitzungs-Identifikation in Feedback/Chat-Logs; E-Mail nur in Waitlist mit Einwilligung.
 
 ## Wichtige Hinweise
 - Der Fokus liegt auf **Schnelligkeit**: Minimaler, funktionierender MVP vor der TUM-Frist und weiteren Bewerbungsfristen.

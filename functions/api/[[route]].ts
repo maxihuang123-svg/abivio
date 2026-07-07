@@ -23,6 +23,12 @@ interface Program {
   is_creative: number;
   is_health: number;
   popularity_rank: number;
+  application_deadline_winter: string | null;
+  application_deadline_summer: string | null;
+  university_id: number | null;
+  university_name?: string;
+  university_short_name?: string;
+  university_city?: string;
 }
 
 interface QuizAnswers {
@@ -33,6 +39,7 @@ interface QuizAnswers {
   language?: string;
   duration?: string;
   region?: string;
+  preferred_university?: string | null;
 }
 
 interface Env {
@@ -71,7 +78,12 @@ app.post('/waitlist', async (c) => {
 
 // List all programs (for internal use)
 app.get('/programs', async (c) => {
-  const { results } = await c.env.DB.prepare('SELECT * FROM programs ORDER BY popularity_rank ASC').all<Program>();
+  const { results } = await c.env.DB.prepare(`
+    SELECT p.*, u.name AS university_name, u.short_name AS university_short_name, u.city AS university_city
+    FROM programs p
+    LEFT JOIN universities u ON p.university_id = u.hs_number
+    ORDER BY p.popularity_rank ASC
+  `).all<Program>();
   return c.json({ programs: results || [] });
 });
 
@@ -142,6 +154,58 @@ app.post('/quiz', async (c) => {
   });
 });
 
+// Submit feedback for recommendations
+app.post('/feedback', async (c) => {
+  const body = await c.req.json<{
+    session_id?: string;
+    helpfulness?: number;
+    found_match?: string;
+    nps?: number;
+    missing?: string;
+  }>();
+
+  const sessionId = body.session_id;
+  const helpfulness = body.helpfulness;
+  const foundMatch = body.found_match;
+  const nps = body.nps;
+  const missing = body.missing?.trim();
+
+  if (!sessionId) {
+    throw new HTTPException(400, { message: 'session_id erforderlich' });
+  }
+
+  // Validate ranges
+  if (helpfulness !== undefined && (helpfulness < 1 || helpfulness > 5)) {
+    throw new HTTPException(400, { message: 'helpfulness muss zwischen 1 und 5 liegen' });
+  }
+  if (foundMatch !== undefined && !['yes', 'somewhat', 'no'].includes(foundMatch)) {
+    throw new HTTPException(400, { message: 'found_match ungültig' });
+  }
+  if (nps !== undefined && (nps < 0 || nps > 10)) {
+    throw new HTTPException(400, { message: 'nps muss zwischen 0 und 10 liegen' });
+  }
+
+  try {
+    await c.env.DB.prepare(
+      `INSERT INTO recommendation_feedback (session_id, helpfulness, found_match, nps, missing)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(session_id) DO UPDATE SET
+         helpfulness = excluded.helpfulness,
+         found_match = excluded.found_match,
+         nps = excluded.nps,
+         missing = excluded.missing,
+         created_at = CURRENT_TIMESTAMP`
+    )
+      .bind(sessionId, helpfulness ?? null, foundMatch ?? null, nps ?? null, missing || null)
+      .run();
+
+    return c.json({ success: true, message: 'Feedback gespeichert. Danke!' });
+  } catch (err: any) {
+    console.error('feedback error', err);
+    throw new HTTPException(500, { message: `Feedback konnte nicht gespeichert werden: ${err?.message || err}` });
+  }
+});
+
 // Get recommendations for a session
 app.get('/recommendations', async (c) => {
   const sessionId = c.req.query('session_id');
@@ -151,9 +215,10 @@ app.get('/recommendations', async (c) => {
 
   const { results } = await c.env.DB
     .prepare(
-      `SELECT p.*, r.score, r.reasoning, r.rank
+      `SELECT p.*, r.score, r.reasoning, r.rank, u.name AS university_name, u.short_name AS university_short_name, u.city AS university_city
        FROM recommendations r
        JOIN programs p ON r.program_id = p.id
+       LEFT JOIN universities u ON p.university_id = u.hs_number
        WHERE r.session_id = ?
        ORDER BY r.rank ASC`
     )
@@ -305,6 +370,58 @@ app.get('/admin/chat-logs', async (c) => {
     summary: results || [],
     recent_consented: recent.results || [],
     note: 'Question previews are only stored when the user explicitly consented.',
+  });
+});
+
+// Admin endpoint to review recommendation feedback
+app.get('/admin/feedback', async (c) => {
+  const providedKey = c.req.query('key');
+  const expectedKey = c.env.ADMIN_API_KEY;
+
+  if (expectedKey && providedKey !== expectedKey) {
+    throw new HTTPException(401, { message: 'Unauthorized' });
+  }
+
+  const { results } = await c.env.DB
+    .prepare(
+      `SELECT
+        COUNT(*) as total,
+        AVG(helpfulness) as avg_helpfulness,
+        AVG(nps) as avg_nps,
+        SUM(CASE WHEN found_match = 'yes' THEN 1 ELSE 0 END) as found_yes,
+        SUM(CASE WHEN found_match = 'somewhat' THEN 1 ELSE 0 END) as found_somewhat,
+        SUM(CASE WHEN found_match = 'no' THEN 1 ELSE 0 END) as found_no
+       FROM recommendation_feedback`
+    )
+    .all<{
+      total: number;
+      avg_helpfulness: number | null;
+      avg_nps: number | null;
+      found_yes: number;
+      found_somewhat: number;
+      found_no: number;
+    }>();
+
+  const recent = await c.env.DB
+    .prepare(
+      `SELECT id, session_id, helpfulness, found_match, nps, missing, created_at
+       FROM recommendation_feedback
+       ORDER BY created_at DESC
+       LIMIT 100`
+    )
+    .all<{
+      id: number;
+      session_id: string;
+      helpfulness: number | null;
+      found_match: string | null;
+      nps: number | null;
+      missing: string | null;
+      created_at: string;
+    }>();
+
+  return c.json({
+    summary: results?.[0] || null,
+    recent: recent.results || [],
   });
 });
 
@@ -555,7 +672,11 @@ app.onError((err, c) => {
 
 // Recommendation engine
 async function computeRecommendations(db: D1Database, answers: QuizAnswers) {
-  const { results } = await db.prepare('SELECT * FROM programs').all<Program>();
+  const { results } = await db.prepare(`
+    SELECT p.*, u.name AS university_name, u.short_name AS university_short_name, u.city AS university_city
+    FROM programs p
+    LEFT JOIN universities u ON p.university_id = u.hs_number
+  `).all<Program>();
   const programs = results || [];
 
   const userInterests = answers.interests || [];
@@ -564,6 +685,7 @@ async function computeRecommendations(db: D1Database, answers: QuizAnswers) {
   const userNc = answers.nc_grade ?? null;
   const userLanguage = answers.language || 'de';
   const userDuration = answers.duration || 'egal';
+  const preferredUniversity = answers.preferred_university || null;
 
   const scored = programs.map((program) => {
     let score = 0;
@@ -629,6 +751,22 @@ async function computeRecommendations(db: D1Database, answers: QuizAnswers) {
       reasons.push('längerer Studiengang');
     } else if (userDuration === 'lang' && duration >= 8) {
       score += 3;
+    }
+
+    // University preference
+    if (preferredUniversity) {
+      const uniName = program.university_name || '';
+      const uniShortName = program.university_short_name || '';
+      const uniCity = program.university_city || '';
+      const preferred = preferredUniversity.toLowerCase();
+      const isMatch =
+        uniName.toLowerCase().includes(preferred) ||
+        uniShortName.toLowerCase().includes(preferred) ||
+        uniCity.toLowerCase().includes(preferred);
+      if (isMatch) {
+        score += 20;
+        reasons.push(`an deiner Wunsch-Uni ${uniCity}`);
+      }
     }
 
     // Popularity tie-breaker

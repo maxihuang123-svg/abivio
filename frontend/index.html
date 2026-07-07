@@ -116,6 +116,70 @@
         <h2>Deine Top-Studiengänge</h2>
         <p class="results-intro">Basierend auf deinen Antworten passen diese Studiengänge besonders gut zu dir:</p>
         <div id="results-list" class="results-list"></div>
+
+        <div id="feedback-area" class="feedback-area" hidden>
+          <h3>Wie hilfreich waren deine Empfehlungen?</h3>
+          <p class="feedback-subtitle">Dein Feedback hilft uns, abivio besser zu machen. Alles optional.</p>
+          <form id="feedback-form" class="feedback-form">
+            <input type="hidden" name="session_id" id="feedback-session-id">
+
+            <div class="feedback-field">
+              <label class="feedback-label">Wie passend sind die Empfehlungen?</label>
+              <div class="star-rating" id="helpfulness-stars" data-name="helpfulness">
+                <button type="button" data-value="1" aria-label="1 Stern">★</button>
+                <button type="button" data-value="2" aria-label="2 Sterne">★</button>
+                <button type="button" data-value="3" aria-label="3 Sterne">★</button>
+                <button type="button" data-value="4" aria-label="4 Sterne">★</button>
+                <button type="button" data-value="5" aria-label="5 Sterne">★</button>
+              </div>
+              <span class="star-hint" id="helpfulness-hint">Tippe auf einen Stern</span>
+            </div>
+
+            <div class="feedback-field">
+              <label class="feedback-label">Hast du einen passenden Studiengang gefunden?</label>
+              <div class="feedback-options">
+                <label class="feedback-option">
+                  <input type="radio" name="found_match" value="yes">
+                  <span>Ja, sehr passend</span>
+                </label>
+                <label class="feedback-option">
+                  <input type="radio" name="found_match" value="somewhat">
+                  <span>Teilweise</span>
+                </label>
+                <label class="feedback-option">
+                  <input type="radio" name="found_match" value="no">
+                  <span>Nicht wirklich</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="feedback-field">
+              <label class="feedback-label" for="feedback-missing">Was fehlt dir oder könnte besser sein?</label>
+              <textarea id="feedback-missing" name="missing" rows="3" maxlength="500" placeholder="z. B. mehr Hochschulen, bessere NC-Infos, andere Fächer…"></textarea>
+            </div>
+
+            <div class="feedback-field">
+              <label class="feedback-label">Wie wahrscheinlich würdest du abivio Freunden empfehlen? (0–10)</label>
+              <div class="nps-scale">
+                <label><input type="radio" name="nps" value="0"><span>0</span></label>
+                <label><input type="radio" name="nps" value="1"><span>1</span></label>
+                <label><input type="radio" name="nps" value="2"><span>2</span></label>
+                <label><input type="radio" name="nps" value="3"><span>3</span></label>
+                <label><input type="radio" name="nps" value="4"><span>4</span></label>
+                <label><input type="radio" name="nps" value="5"><span>5</span></label>
+                <label><input type="radio" name="nps" value="6"><span>6</span></label>
+                <label><input type="radio" name="nps" value="7"><span>7</span></label>
+                <label><input type="radio" name="nps" value="8"><span>8</span></label>
+                <label><input type="radio" name="nps" value="9"><span>9</span></label>
+                <label><input type="radio" name="nps" value="10"><span>10</span></label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary feedback-submit">Feedback senden</button>
+            <p id="feedback-message" class="form-message" aria-live="polite"></p>
+          </form>
+        </div>
+
         <div class="results-actions">
           <a href="#quiz" id="retake-quiz" class="btn btn-secondary">Quiz wiederholen</a>
           <a href="#waitlist" class="btn btn-primary">Mehr Tipps per Mail</a>

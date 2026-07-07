@@ -1,6 +1,7 @@
 -- D1 Schema for abivio.de MVP
 
 DROP TABLE IF EXISTS waitlist;
+DROP TABLE IF EXISTS recommendation_feedback;
 DROP TABLE IF EXISTS quiz_sessions;
 DROP TABLE IF EXISTS quiz_answers;
 DROP TABLE IF EXISTS recommendations;
@@ -68,8 +69,9 @@ CREATE TABLE programs (
   is_creative BOOLEAN DEFAULT 0,
   is_health BOOLEAN DEFAULT 0,
   popularity_rank INTEGER DEFAULT 999,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (university_id) REFERENCES universities(id)
+  application_deadline_winter TEXT,
+  application_deadline_summer TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Quiz sessions
@@ -100,6 +102,19 @@ CREATE TABLE recommendations (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (session_id) REFERENCES quiz_sessions(id),
   FOREIGN KEY (program_id) REFERENCES programs(id)
+);
+
+-- Feedback after viewing recommendations
+-- Linked to quiz session, strictly anonymous, optional.
+CREATE TABLE recommendation_feedback (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT NOT NULL UNIQUE,
+  helpfulness INTEGER CHECK(helpfulness BETWEEN 1 AND 5),
+  found_match TEXT CHECK(found_match IN ('yes', 'somewhat', 'no')),
+  nps INTEGER CHECK(nps BETWEEN 0 AND 10),
+  missing TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (session_id) REFERENCES quiz_sessions(id)
 );
 
 -- Anonymous chat logs for improving the chatbot

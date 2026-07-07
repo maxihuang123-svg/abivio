@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const programs = JSON.parse(fs.readFileSync(path.join(root, 'db', 'programs_200_enriched.json'), 'utf8'));
+const programs = JSON.parse(fs.readFileSync(path.join(root, 'db', 'programs_expanded.json'), 'utf8'));
 const universities = JSON.parse(fs.readFileSync(path.join(root, 'db', 'universities_seed.json'), 'utf8'));
+const universityByHsNumber = new Map(universities.map((u) => [u.hs_number, u]));
 
 function countBy(key, items) {
   const map = {};
@@ -62,6 +63,15 @@ function qualityIssues(items) {
 const fieldCounts = countBy('field', programs);
 const languageCounts = countBy('language', programs);
 const durationCounts = countBy('duration_semesters', programs);
+
+const universityCounts = Object.entries(
+  programs.reduce((map, p) => {
+    const uni = universityByHsNumber.get(p.university_id);
+    const label = uni ? uni.short_name : `Uni ${p.university_id}`;
+    map[label] = (map[label] || 0) + 1;
+    return map;
+  }, {})
+).sort((a, b) => b[1] - a[1]);
 const ncValues = programs.filter((p) => p.nc_required).map((p) => p.nc_grade);
 const ncMin = Math.min(...ncValues);
 const ncMax = Math.max(...ncValues);
@@ -83,21 +93,25 @@ function escapeHtml(text) {
 
 function renderTableRows(items) {
   return items
-    .map(
-      (p) => `
+    .map((p) => {
+      const uni = universityByHsNumber.get(p.university_id);
+      const uniLabel = uni ? uni.short_name : '';
+      return `
     <tr>
       <td>${escapeHtml(p.name)}</td>
+      <td>${escapeHtml(uniLabel)}</td>
       <td>${escapeHtml(p.field)}</td>
       <td>${escapeHtml(p.degree)}</td>
       <td>${p.duration_semesters}</td>
       <td>${escapeHtml(p.language)}</td>
       <td>${p.nc_required ? p.nc_grade : '—'}</td>
+      <td>${escapeHtml(p.application_deadline_winter || '')}</td>
       <td>${escapeHtml(p.interests || '')}</td>
       <td>${escapeHtml(p.strengths || '')}</td>
       <td>${escapeHtml(p.work_style || '')}</td>
     </tr>
-  `
-    )
+  `;
+    })
     .join('');
 }
 
@@ -140,7 +154,7 @@ const html = `<!DOCTYPE html>
     .card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-sm); }
     .card h3 { margin-top: 0; font-size: 1.1rem; }
     .big-number { font-size: 2.5rem; font-weight: 800; color: var(--color-primary); }
-    .bar-row { display: grid; grid-template-columns: 140px 1fr 40px; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .bar-row { display: grid; grid-template-columns: 180px 1fr 40px; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
     .bar-label { font-size: 0.9rem; color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bar-track { height: 10px; background: var(--color-surface); border-radius: 999px; overflow: hidden; }
     .bar-fill { height: 100%; background: var(--color-primary); border-radius: 999px; }
@@ -210,9 +224,16 @@ const html = `<!DOCTYPE html>
           ${renderBarChart(fieldCounts)}
         </div>
         <div class="card">
+          <h3>Verteilung nach Universität</h3>
+          ${renderBarChart(universityCounts.slice(0, 15))}
+        </div>
+        <div class="card">
           <h3>Verteilung nach Sprache</h3>
           ${renderBarChart(languageCounts)}
         </div>
+      </div>
+
+      <div class="dashboard">
         <div class="card">
           <h3>Reguläre Studiendauer</h3>
           ${renderBarChart(durationCounts)}
@@ -242,11 +263,13 @@ const html = `<!DOCTYPE html>
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Universität</th>
                 <th>Fachbereich</th>
                 <th>Abschluss</th>
                 <th>Semester</th>
                 <th>Sprache</th>
                 <th>NC</th>
+                <th>Bewerbungsfrist</th>
                 <th>Interessen</th>
                 <th>Stärken</th>
                 <th>Arbeitsstil</th>

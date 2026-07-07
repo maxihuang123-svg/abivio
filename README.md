@@ -13,7 +13,9 @@ KI-gestützte Studienempfehlungsplattform für deutsche Abiturienten.
 - Interaktives Quiz (7 Fragen)
 - Regelbasierte Studiumsempfehlungen
 - Cloudflare Pages + Functions + D1
-- 56 kuratierte deutsche Bachelor-Studiengänge als Seed-Daten
+- 200 kuratierte deutsche Bachelor-Studiengänge
+- Ausgeweitet auf ~1.000 studiengangsspezifische Angebote an 32 Top-Unis
+- Bewerbungsfristen-Fokus auf den 15.07. (Wintersemester)
 
 ## Schnellstart (lokal)
 
@@ -65,14 +67,17 @@ wrangler.toml     # Cloudflare-Konfiguration
 - `npm run dev` — Lokaler Dev-Server
 - `npm run deploy` — Deploy auf Cloudflare Pages
 - `npm run db:migrate` — Schema auf Remote-D1 anwenden
-- `npm run db:seed` — Seed-Daten auf Remote-D1 anwenden
-- `npm run db:reset` — Schema + Seed neu anwenden
+- `npm run db:seed` — Erweiterte Seed-Daten auf Remote-D1 anwenden (~1.000 Programme)
+- `npm run db:seed:200` — Ursprüngliche 200 Programme auf Remote-D1 anwenden
+- `npm run db:reset` — Schema + erweiterte Seeds neu anwenden
+- `npm run db:expand:programs` — Programme auf Top-Unis ausweiten
+- `npm run db:explorer` — Statische Daten-Explorer-Seite neu generieren
 
 ## Nächste Schritte
 
 - [ ] abivio.de als Custom Domain verbinden
-- [ ] Analytics/Tracking hinzufügen
-- [ ] Impressum + Datenschutz erstellen
+- [ ] Analytics/Tracking hinzufügen (Cloudflare Web Analytics Token ersetzen)
+- [ ] Impressum + Datenschutz mit echten Daten ausfüllen
 - [ ] Nutzerfeedback nach dem Quiz sammeln
-- [ ] LLM-gestützte Begründungen integrieren
 - [ ] Bewerbungsfristen-Reminder per E-Mail
+- [ ] Daten-Explorer intern verlinken (optional)
