@@ -47,6 +47,7 @@ interface Env {
   AI: Ai;
   ENVIRONMENT?: string;
   ADMIN_API_KEY?: string;
+  RESEND_API_KEY?: string;
 }
 
 const app = new Hono<{ Bindings: Env }>().basePath('/api');
@@ -197,6 +198,64 @@ app.post('/feedback', async (c) => {
   } catch (err: any) {
     console.error('feedback error', err);
     throw new HTTPException(500, { message: `Feedback konnte nicht gespeichert werden: ${err?.message || err}` });
+  }
+});
+
+// Send recommendations by email
+app.post('/share/email', async (c) => {
+  const body = await c.req.json<{ session_id?: string; email?: string }>();
+  const sessionId = body.session_id;
+  const email = body.email?.trim().toLowerCase();
+
+  if (!sessionId) {
+    throw new HTTPException(400, { message: 'session_id erforderlich' });
+  }
+  if (!email || !email.includes('@')) {
+    throw new HTTPException(400, { message: 'Gültige E-Mail-Adresse erforderlich' });
+  }
+
+  const resendKey = c.env.RESEND_API_KEY;
+  if (!resendKey) {
+    throw new HTTPException(503, { message: 'E-Mail-Versand ist aktuell nicht konfiguriert.' });
+  }
+
+  const recommendations = await fetchRecommendations(c.env.DB, sessionId);
+  if (!recommendations || recommendations.length === 0) {
+    throw new HTTPException(404, { message: 'Keine Empfehlungen gefunden' });
+  }
+
+  const shareUrl = `https://abivio.de/?session=${encodeURIComponent(sessionId)}`;
+  const subject = 'Deine abivio-Studiengang-Empfehlungen';
+  const html = buildRecommendationEmail(recommendations, shareUrl);
+  const text = buildRecommendationEmailText(recommendations, shareUrl);
+
+  try {
+    const resendRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'abivio <noreply@abivio.de>',
+        to: email,
+        subject,
+        html,
+        text,
+      }),
+    });
+
+    if (!resendRes.ok) {
+      const errText = await resendRes.text();
+      console.error('resend error', resendRes.status, errText);
+      throw new HTTPException(502, { message: 'E-Mail konnte nicht versendet werden.' });
+    }
+
+    return c.json({ success: true, message: 'Empfehlungen wurden an deine E-Mail gesendet.' });
+  } catch (err: any) {
+    if (err instanceof HTTPException) throw err;
+    console.error('email send error', err);
+    throw new HTTPException(500, { message: 'E-Mail-Versand fehlgeschlagen.' });
   }
 });
 
@@ -814,6 +873,88 @@ function categoryBonus(program: Program, interests: string[]): number {
     }
   }
   return bonus;
+}
+
+async function fetchRecommendations(db: D1Database, sessionId: string) {
+  const { results } = await db
+    .prepare(
+      `SELECT p.*, r.score, r.reasoning, r.rank, u.name AS university_name, u.short_name AS university_short_name, u.city AS university_city
+       FROM recommendations r
+       JOIN programs p ON r.program_id = p.id
+       LEFT JOIN universities u ON p.university_id = u.hs_number
+       WHERE r.session_id = ?
+       ORDER BY r.rank ASC`
+    )
+    .bind(sessionId)
+    .all<Program & { score: number; reasoning: string; rank: number }>();
+
+  return results || [];
+}
+
+function escapeHtmlEmail(text: string | null | undefined): string {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function buildRecommendationEmail(recommendations: Program[], shareUrl: string): string {
+  const items = recommendations
+    .map((rec, idx) => {
+      const ncText = rec.nc_required
+        ? `NC: ca. ${rec.nc_grade?.toFixed(1).replace('.', ',') || 'k.A.'}`
+        : 'Ohne NC';
+      const uniText = rec.university_name ? ` an der ${escapeHtmlEmail(rec.university_name)}` : '';
+      return `
+        <div style="margin-bottom: 24px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;">
+          <h3 style="margin: 0 0 8px; font-size: 18px;">${idx + 1}. ${escapeHtmlEmail(rec.name)}${uniText}</h3>
+          <p style="margin: 0 0 8px; color: #6b7280; font-size: 14px;">
+            ${escapeHtmlEmail(rec.field)} · ${escapeHtmlEmail(rec.degree)} · ${rec.duration_semesters} Semester · ${ncText}
+          </p>
+          <p style="margin: 0 0 8px; color: #111827;">${escapeHtmlEmail(rec.description)}</p>
+          <p style="margin: 0; padding: 10px; background: #e9eefd; border-radius: 8px; color: #3730a3; font-size: 14px;">
+            <strong>Warum das passt:</strong> ${escapeHtmlEmail(rec.reasoning)}
+          </p>
+        </div>
+      `;
+    })
+    .join('');
+
+  return `
+    <div style="font-family: Inter, system-ui, sans-serif; max-width: 600px; margin: 0 auto; color: #111827;">
+      <h2 style="color: #4f46e5;">Deine abivio-Empfehlungen</h2>
+      <p>Hier sind die Bachelor-Studiengänge, die am besten zu deinen Antworten passen:</p>
+      ${items}
+      <p style="margin-top: 24px;">
+        <a href="${escapeHtmlEmail(shareUrl)}" style="display: inline-block; padding: 12px 20px; background: #4f46e5; color: #fff; text-decoration: none; border-radius: 10px; font-weight: 600;">
+          Empfehlungen online ansehen
+        </a>
+      </p>
+      <p style="color: #6b7280; font-size: 13px; margin-top: 24px;">
+        Diese E-Mail wurde auf Wunsch von abivio.de versendet.
+      </p>
+    </div>
+  `;
+}
+
+function buildRecommendationEmailText(recommendations: Program[], shareUrl: string): string {
+  const items = recommendations
+    .map((rec, idx) => {
+      const ncText = rec.nc_required
+        ? `NC: ca. ${rec.nc_grade?.toFixed(1).replace('.', ',') || 'k.A.'}`
+        : 'Ohne NC';
+      const uniText = rec.university_name ? ` an der ${rec.university_name}` : '';
+      return `${idx + 1}. ${rec.name}${uniText}
+${rec.field} · ${rec.degree} · ${rec.duration_semesters} Semester · ${ncText}
+${rec.description}
+Warum das passt: ${rec.reasoning}`;
+    })
+    .join('\n\n');
+
+  return `Deine abivio-Empfehlungen\n\n${items}\n\nOnline ansehen: ${shareUrl}\n\nDiese E-Mail wurde auf Wunsch von abivio.de versendet.`;
 }
 
 export const onRequest = handle(app);

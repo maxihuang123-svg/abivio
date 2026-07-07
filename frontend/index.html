@@ -180,6 +180,26 @@
           </form>
         </div>
 
+        <div id="share-area" class="share-area" hidden>
+          <h3>Deine Empfehlungen speichern oder teilen</h3>
+          <p class="share-subtitle">Schick sie dir per E-Mail oder kopiere den Link, um sie später wieder aufzurufen.</p>
+
+          <form id="share-email-form" class="share-email-form">
+            <input type="hidden" name="session_id" id="share-session-id">
+            <div class="share-form-row">
+              <input type="email" name="email" id="share-email" placeholder="Deine E-Mail-Adresse" required class="input">
+              <button type="submit" class="btn btn-primary">Per E-Mail senden</button>
+            </div>
+            <p id="share-email-message" class="form-message" aria-live="polite"></p>
+          </form>
+
+          <div class="share-link-row">
+            <input type="text" id="share-link" readonly class="input share-link-input" value="">
+            <button type="button" id="copy-share-link" class="btn btn-secondary">Link kopieren</button>
+          </div>
+          <p id="copy-message" class="form-message" aria-live="polite"></p>
+        </div>
+
         <div class="results-actions">
           <a href="#quiz" id="retake-quiz" class="btn btn-secondary">Quiz wiederholen</a>
           <a href="#waitlist" class="btn btn-primary">Mehr Tipps per Mail</a>

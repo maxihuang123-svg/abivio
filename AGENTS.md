@@ -48,6 +48,7 @@ wrangler.toml     -> Cloudflare-Konfiguration (inkl. AI-Binding)
 - `POST /api/quiz` — Quiz-Antworten speichern und Empfehlungen berechnen
 - `GET /api/recommendations?session_id=...` — Empfehlungen abrufen
 - `POST /api/feedback` — Feedback zu Empfehlungen speichern (Sterne, Match, NPS, Freitext)
+- `POST /api/share/email` — Empfehlungen per E-Mail senden
 - `GET /api/admin/feedback?key=...` — Zusammenfassung des Empfehlungs-Feedbacks (Admin)
 - `GET /api/programs` — Liste aller Studiengänge (für interne Zwecke)
 - `POST /api/chat` — Studienberater-Chatbot (Cloudflare Workers AI mit FAQ-Shortcuts)

@@ -22,3 +22,6 @@ d1-create-output.txt
 .admin-key.txt
 .env
 .env.local
+
+# Local enrichment cache
+.cache/

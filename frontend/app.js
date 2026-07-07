@@ -154,9 +154,18 @@
   const feedbackMessage = document.getElementById('feedback-message');
   const helpfulnessStars = document.getElementById('helpfulness-stars');
   const helpfulnessHint = document.getElementById('helpfulness-hint');
+  const shareArea = document.getElementById('share-area');
+  const shareEmailForm = document.getElementById('share-email-form');
+  const shareSessionId = document.getElementById('share-session-id');
+  const shareEmailInput = document.getElementById('share-email');
+  const shareEmailMessage = document.getElementById('share-email-message');
+  const shareLinkInput = document.getElementById('share-link');
+  const copyShareLinkBtn = document.getElementById('copy-share-link');
+  const copyMessage = document.getElementById('copy-message');
 
   // Initialize
   renderQuestion(currentQuestion);
+  loadSessionFromUrl();
 
   // Waitlist handler
   if (waitlistForm) {
@@ -346,6 +355,7 @@
     if (!recommendations || recommendations.length === 0) {
       resultsList.innerHTML = '<p>Leider konnten wir keine passenden Empfehlungen finden. Versuche es mit anderen Antworten.</p>';
       feedbackArea.hidden = true;
+      if (shareArea) shareArea.hidden = true;
       return;
     }
 
@@ -387,6 +397,9 @@
     resetFeedbackForm();
     feedbackSessionId.value = sessionId;
     feedbackArea.hidden = false;
+
+    // Show share options
+    showShareArea();
   }
 
   // Feedback star rating
@@ -474,6 +487,96 @@
     });
   }
 
+  function showShareArea() {
+    if (!shareArea) return;
+    shareSessionId.value = sessionId;
+    shareLinkInput.value = `${window.location.origin}/?session=${encodeURIComponent(sessionId)}`;
+    shareArea.hidden = false;
+  }
+
+  function showShareEmailMessage(text, type) {
+    shareEmailMessage.textContent = text;
+    shareEmailMessage.className = `form-message ${type}`;
+  }
+
+  function showCopyMessage(text, type) {
+    copyMessage.textContent = text;
+    copyMessage.className = `form-message ${type}`;
+  }
+
+  if (shareEmailForm) {
+    shareEmailForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(shareEmailForm);
+      const email = formData.get('email');
+      const sid = formData.get('session_id');
+
+      try {
+        const res = await fetch(`${API_BASE}/api/share/email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sid, email }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          showShareEmailMessage(data.message, 'success');
+          shareEmailForm.reset();
+          shareSessionId.value = sid;
+        } else {
+          showShareEmailMessage(data.error || 'Fehler beim Senden.', 'error');
+        }
+      } catch (err) {
+        showShareEmailMessage('Netzwerkfehler. Bitte später erneut versuchen.', 'error');
+      }
+    });
+  }
+
+  if (copyShareLinkBtn && shareLinkInput) {
+    copyShareLinkBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(shareLinkInput.value);
+        showCopyMessage('Link kopiert!', 'success');
+      } catch (err) {
+        shareLinkInput.select();
+        showCopyMessage('Link markiert — kopiere ihn mit Strg+C.', 'error');
+      }
+    });
+  }
+
+  async function loadSessionFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const urlSession = params.get('session');
+    if (!urlSession || !resultsSection) return;
+
+    sessionId = urlSession;
+
+    quizForm.hidden = true;
+    quizProgress.hidden = true;
+    quizLoading.hidden = false;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/recommendations?session_id=${encodeURIComponent(sessionId)}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        renderResults(data.recommendations);
+        resultsSection.hidden = false;
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        showShareEmailMessage('Empfehlungen konnten nicht geladen werden. Mache das Quiz neu.', 'error');
+        quizForm.hidden = false;
+        quizProgress.hidden = false;
+      }
+    } catch (err) {
+      showShareEmailMessage('Netzwerkfehler. Bitte später erneut versuchen.', 'error');
+      quizForm.hidden = false;
+      quizProgress.hidden = false;
+    } finally {
+      quizLoading.hidden = true;
+    }
+  }
+
   function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -501,6 +604,7 @@
       sessionId = generateSessionId();
       resultsSection.hidden = true;
       feedbackArea.hidden = true;
+      if (shareArea) shareArea.hidden = true;
       quizForm.hidden = false;
       quizProgress.hidden = false;
       renderQuestion(0);
