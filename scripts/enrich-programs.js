@@ -1,85 +1,92 @@
 /**
  * LLM-Enrichment für Studiengangsdaten
  *
- * Dieses Skript nimmt eine strukturierte Liste von Studiengängen
- * und bereichert sie mit Beschreibungen, Berufsperspektiven und Tags.
+ * Dieses Skript bereichert eine strukturierte Liste von Studiengängen
+ * mit differenzierten Beschreibungen, Berufsperspektiven und Tags.
  *
- * Voraussetzung: OPENAI_API_KEY als Umgebungsvariable oder in .env
+ * Ausführung:
+ *   OPENAI_API_KEY=... node scripts/enrich-programs.js [input.json] [output.json]
  *
- * Achtung: LLM-Ausgaben müssen auf Richtigkeit geprüft werden.
+ * Voreingestellt:
+ *   Input:  db/programs_200_enriched.json
+ *   Output: db/programs_200_enriched.json (überschreibt nur Enrichment-Felder)
+ *
+ * Features:
+ *   - Resume-fähig über .cache/enrich-programs-cache.json
+ *   - Kostenoptimiert mit gpt-4o-mini
+ *   - Prompt zwingt zur Abgrenzung gegen ähnliche Studiengänge im selben Fach
+ *   - Fehlerhafte Einträge werden übersprungen und können erneut angereichert werden
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// Mock-Modus: Wenn kein API-Key vorhanden ist, werden Beispiel-Daten generiert
-const USE_MOCK = !process.env.OPENAI_API_KEY;
+const API_KEY = process.env.OPENAI_API_KEY;
+const USE_MOCK = !API_KEY;
+
+const root = path.resolve(__dirname, '..');
+const inputPath = process.argv[2] || path.join(root, 'db', 'programs_200_enriched.json');
+const outputPath = process.argv[3] || inputPath;
+const cacheDir = path.join(root, '.cache');
+const cachePath = path.join(cacheDir, 'enrich-programs-cache.json');
 
 const INTEREST_TAGS = [
   'technik', 'wirtschaft', 'medizin', 'natur', 'gesellschaft',
-  'kreativ', 'sprachen', 'mensch', 'recht', 'kultur'
+  'kreativ', 'sprachen', 'mensch', 'recht', 'kultur',
+  'logik', 'digitales', 'handwerk', 'energie', 'fahrzeuge',
+  'management', 'finanzen', 'unternehmertum', 'gesundheit',
+  'forschung', 'labor', 'design', 'medien', 'kommunikation',
+  'politik', 'sozial', 'beratung', 'bildung', 'umwelt',
+  'sport', 'literatur', 'geschichte', 'kunst', 'musik',
+  'reisen', 'nachhaltigkeit', 'daten', 'struktur', 'strategie'
 ];
 
 const STRENGTH_TAGS = [
   'mathematik', 'informatik', 'physik', 'chemie', 'biologie',
   'deutsch', 'englisch', 'geschichte', 'kunst', 'sport',
-  'sozialkunde', 'geografie'
+  'sozialkunde', 'geografie', 'franzoesisch', 'spanisch',
+  'musik', 'religion', 'philosophie', 'wirtschaft'
 ];
 
 const WORKSTYLE_TAGS = [
   'analytisch', 'kreativ', 'praktisch', 'kommunikativ',
-  'forschung', 'unternehmerisch', 'empathisch'
+  'forschung', 'unternehmerisch', 'empathisch', 'strukturiert',
+  'selbstaendig', 'teamfaehig', 'detailorientiert', 'zielorientiert',
+  'problemloesend', 'konzeptionell', 'experimentell'
 ];
+
+function ensureCacheDir() {
+  if (!fs.existsSync(cacheDir)) {
+    fs.mkdirSync(cacheDir, { recursive: true });
+  }
+}
+
+function loadCache() {
+  if (!fs.existsSync(cachePath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function saveCache(cache) {
+  ensureCacheDir();
+  fs.writeFileSync(cachePath, JSON.stringify(cache, null, 2), 'utf8');
+}
+
+function cacheKey(program) {
+  // Stable key based on the fields that drive the enrichment.
+  return `${program.name}|${program.field}|${program.degree}|${program.language}`;
+}
 
 /**
  * Simuliert eine LLM-Anreicherung ohne API-Aufruf.
- * In der echten Version würde hier OpenAI/Claude aufgerufen.
+ * Wird verwendet, wenn kein OPENAI_API_KEY gesetzt ist.
  */
 async function mockEnrich(program) {
-  const name = program.name.toLowerCase();
   const field = program.field;
 
-  // Interessen-Tags nach Fachrichtung
-  const fieldToInterests = {
-    'Technik & IT': ['technik', 'logik', 'digitales', 'mathematik'],
-    'Ingenieurwesen': ['technik', 'handwerk', 'energie', 'fahrzeuge'],
-    'Wirtschaft': ['wirtschaft', 'management', 'finanzen', 'unternehmertum'],
-    'Medizin & Gesundheit': ['medizin', 'mensch', 'gesundheit', 'beratung'],
-    'Naturwissenschaften': ['natur', 'forschung', 'logik', 'labor'],
-    'Design': ['kreativ', 'design', 'medien', 'technik'],
-    'Medien': ['medien', 'kommunikation', 'kultur', 'kreativ'],
-    'Recht': ['recht', 'gesellschaft', 'logik', 'politik'],
-    'Soziales': ['mensch', 'sozial', 'beratung', 'gesellschaft'],
-    'Geisteswissenschaften': ['kultur', 'sprachen', 'geschichte', 'forschung'],
-    'Sprachen': ['sprachen', 'kultur', 'literatur', 'reisen'],
-    'Kunst': ['kunst', 'kreativ', 'musik', 'kultur'],
-    'Umwelt': ['natur', 'umwelt', 'forschung', 'gesellschaft'],
-    'Sport': ['sport', 'gesundheit', 'mensch', 'management'],
-    'Lehramt': ['mensch', 'bildung', 'gesellschaft', 'kommunikation'],
-    'Interdisziplinär': ['technik', 'mensch', 'forschung', 'logik'],
-  };
-
-  // Schulfächer nach Fachrichtung
-  const fieldToStrengths = {
-    'Technik & IT': ['mathematik', 'informatik', 'physik'],
-    'Ingenieurwesen': ['mathematik', 'physik', 'chemie'],
-    'Wirtschaft': ['mathematik', 'deutsch', 'englisch'],
-    'Medizin & Gesundheit': ['biologie', 'chemie', 'mathematik'],
-    'Naturwissenschaften': ['mathematik', 'chemie', 'biologie'],
-    'Design': ['kunst', 'informatik', 'mathematik'],
-    'Medien': ['deutsch', 'englisch', 'kunst'],
-    'Recht': ['deutsch', 'geschichte', 'englisch'],
-    'Soziales': ['deutsch', 'sozialkunde', 'biologie'],
-    'Geisteswissenschaften': ['deutsch', 'geschichte', 'englisch'],
-    'Sprachen': ['englisch', 'deutsch', 'geschichte'],
-    'Kunst': ['kunst', 'deutsch', 'englisch'],
-    'Umwelt': ['biologie', 'chemie', 'geografie'],
-    'Sport': ['sport', 'biologie', 'mathematik'],
-    'Lehramt': ['deutsch', 'mathematik', 'englisch'],
-    'Interdisziplinär': ['mathematik', 'biologie', 'informatik'],
-  };
-
-  // Beschreibungen nach Fachrichtung
   const fieldToDescription = {
     'Technik & IT': `Im ${program.name}-Studium lernst du, digitale Systeme, Software und Daten zu verstehen, zu gestalten und weiterzuentwickeln.`,
     'Ingenieurwesen': `Das ${program.name}-Studium vermittelt ingenieurwissenschaftliche Grundlagen und Methoden zur Entwicklung technischer Lösungen.`,
@@ -99,7 +106,6 @@ async function mockEnrich(program) {
     'Interdisziplinär': `Das ${program.name}-Studium verbindet verschiedene Disziplinen und bereitet dich auf komplexe, fachübergreifende Aufgaben vor.`,
   };
 
-  // Berufsperspektiven nach Fachrichtung
   const fieldToCareer = {
     'Technik & IT': 'Softwareentwickler, IT-Berater, Data Engineer, Produktmanager',
     'Ingenieurwesen': 'Ingenieur, Projektleiter, Konstrukteur, F&E-Spezialist',
@@ -119,39 +125,13 @@ async function mockEnrich(program) {
     'Interdisziplinär': 'Berater, Projektmanager, Forscher, Fachexperte',
   };
 
-  // Arbeitstile nach Fachrichtung
-  const fieldToWorkStyle = {
-    'Technik & IT': ['analytisch', 'problemloesend', 'selbstaendig'],
-    'Ingenieurwesen': ['praktisch', 'analytisch', 'teamfaehig'],
-    'Wirtschaft': ['kommunikativ', 'strategisch', 'zielorientiert'],
-    'Medizin & Gesundheit': ['empathisch', 'praezise', 'belastbar'],
-    'Naturwissenschaften': ['analytisch', 'experimentell', 'geduldig'],
-    'Design': ['kreativ', 'visuell', 'detailorientiert'],
-    'Medien': ['kommunikativ', 'recherchefreudig', 'textgewandt'],
-    'Recht': ['analytisch', 'sprachgewandt', 'konfliktfaehig'],
-    'Soziales': ['empathisch', 'kommunikativ', 'praktisch'],
-    'Geisteswissenschaften': ['analytisch', 'recherchefreudig', 'kritisch'],
-    'Sprachen': ['sprachgewandt', 'kommunikativ', 'kulturell'],
-    'Kunst': ['kreativ', 'ausdrucksstark', 'selbstaendig'],
-    'Umwelt': ['engagiert', 'analytisch', 'praktisch'],
-    'Sport': ['praktisch', 'motivierend', 'teamfaehig'],
-    'Lehramt': ['kommunikativ', 'geduldig', 'strukturiert'],
-    'Interdisziplinär': ['analytisch', 'kommunikativ', 'flexibel'],
-  };
-
-  const interests = fieldToInterests[field] || ['mensch', 'gesellschaft'];
-  const strengths = fieldToStrengths[field] || ['deutsch', 'englisch'];
   const description = fieldToDescription[field] || `${program.name} ist ein ${program.degree}-Studiengang im Bereich ${field}.`;
   const career = fieldToCareer[field] || 'Berufsmöglichkeiten hängen von Schwerpunktsetzung und Praktika ab.';
-  const workStyle = fieldToWorkStyle[field] || ['analytisch', 'kommunikativ'];
 
   return {
     ...program,
     description,
     career,
-    interests: JSON.stringify(interests.slice(0, 4)),
-    strengths: JSON.stringify(strengths.slice(0, 3)),
-    work_style: JSON.stringify(workStyle),
   };
 }
 
@@ -159,97 +139,145 @@ async function mockEnrich(program) {
  * Echte LLM-Anreicherung über OpenAI API.
  */
 async function llmEnrich(program) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
+  if (!API_KEY) {
     throw new Error('OPENAI_API_KEY nicht gesetzt');
   }
 
-  const prompt = `Du bist ein deutscher Studienberater. Basierend auf diesen Fakten zu einem Studiengang:
+  const prompt = `Du bist ein deutscher Studienberater. Erstelle eine präzise, ansprechende Beschreibung und passende Berufsperspektiven für diesen konkreten Studiengang. Wichtig: Grenze den Studiengang deutlich von ähnlichen Studiengängen im Fachbereich "${program.field}" ab und nenne die spezifischen Inhalte, Methoden oder Ziele, die ihn einzigartig machen.
 
 Name: ${program.name}
-Fachrichtung: ${program.field}
+Fachbereich: ${program.field}
 Abschluss: ${program.degree}
 Dauer: ${program.duration_semesters} Semester
-Sprache: ${program.language}
+Sprache: ${program.language === 'en' ? 'Englisch' : 'Deutsch'}
 
 Erstelle ein JSON-Objekt mit diesen Feldern:
-- description: Eine kurze, ansprechende Beschreibung (1–2 Sätze)
-- career: Typische Berufsperspektiven (kommagetrennt)
+- description: 1–2 Sätze, was diesen Studiengang konkret auszeichnet (max. 240 Zeichen).
+- career: 3–5 typische Berufsperspektiven, kommagetrennt, passend zum konkreten Studiengang.
 - interests: Array mit 3–5 Interessen-Tags aus dieser Liste: ${INTEREST_TAGS.join(', ')}
 - strengths: Array mit 2–4 passenden Schulfächern aus dieser Liste: ${STRENGTH_TAGS.join(', ')}
 - work_style: Array mit 2–3 passenden Arbeitsstil-Tags aus dieser Liste: ${WORKSTYLE_TAGS.join(', ')}
 
-Antworte NUR mit gültigem JSON, ohne Markdown-Formatierung.`;
+Antworte NUR mit gültigem JSON, ohne Markdown-Formatierung, ohne Erklärungen. Beispielformat:
+{"description":"...","career":"...","interests":["..."],"strengths":["..."],"work_style":["..."]}`;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
-      temperature: 0.3,
+      temperature: 0.4,
+      max_tokens: 350,
     }),
   });
 
   if (!response.ok) {
-    throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+    const text = await response.text();
+    throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${text}`);
   }
 
   const data = await response.json();
-  const content = data.choices[0].message.content;
-  const enrichment = JSON.parse(content);
+  const content = data.choices?.[0]?.message?.content;
+  if (!content) {
+    throw new Error('Leere Antwort von OpenAI API');
+  }
+
+  let enrichment;
+  try {
+    enrichment = JSON.parse(content);
+  } catch {
+    // Sometimes the model wraps JSON in markdown code fences.
+    const cleaned = content.replace(/^```json\s*/, '').replace(/```\s*$/, '');
+    enrichment = JSON.parse(cleaned);
+  }
+
+  const normalizeArray = (val) => {
+    if (Array.isArray(val)) return val.map((s) => String(s).trim().toLowerCase());
+    if (typeof val === 'string') return val.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+    return [];
+  };
 
   return {
     ...program,
-    description: enrichment.description,
-    career: enrichment.career,
-    interests: JSON.stringify(enrichment.interests),
-    strengths: JSON.stringify(enrichment.strengths),
-    work_style: JSON.stringify(enrichment.work_style),
+    description: enrichment.description || program.description,
+    career: enrichment.career || program.career,
+    interests: JSON.stringify(normalizeArray(enrichment.interests).slice(0, 5)),
+    strengths: JSON.stringify(normalizeArray(enrichment.strengths).slice(0, 4)),
+    work_style: JSON.stringify(normalizeArray(enrichment.work_style).slice(0, 3)),
   };
 }
 
 async function main() {
-  const inputPath = process.argv[2] || path.join(__dirname, '..', 'db', 'programs_raw.json');
-  const outputPath = process.argv[3] || path.join(__dirname, '..', 'db', 'programs_enriched.json');
-
   if (!fs.existsSync(inputPath)) {
     console.error(`Datei nicht gefunden: ${inputPath}`);
-    console.error('Erstelle zuerst eine Datei mit rohen Studiengangsdaten.');
     process.exit(1);
   }
 
   const programs = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
-  console.log(`Bereichere ${programs.length} Studiengänge...`);
+  console.log(`Lade ${programs.length} Studiengänge aus ${inputPath}`);
 
   if (USE_MOCK) {
     console.log('⚠️  Kein OPENAI_API_KEY gefunden — verwende Mock-Enrichment.');
+  } else {
+    console.log('🔑 OpenAI API-Key gefunden — starte LLM-Enrichment.');
+    console.log(`   Geschätzte Kosten: ~$${(programs.length * 0.003).toFixed(2)}-${(programs.length * 0.006).toFixed(2)} (gpt-4o-mini, ${programs.length} Aufrufe)`);
   }
 
+  const cache = loadCache();
   const enriched = [];
+  let skipped = 0;
+  let failed = 0;
+
   for (let i = 0; i < programs.length; i++) {
     const program = programs[i];
-    console.log(`  [${i + 1}/${programs.length}] ${program.name}`);
+    const key = cacheKey(program);
+    const label = `${program.name} (${program.field})`;
+
+    // Re-use cached enrichment if the program hasn't changed.
+    if (cache[key] && !USE_MOCK) {
+      console.log(`  [${i + 1}/${programs.length}] ${label} — aus Cache`);
+      enriched.push({ ...program, ...cache[key] });
+      continue;
+    }
+
+    console.log(`  [${i + 1}/${programs.length}] ${label}`);
 
     try {
       const result = USE_MOCK ? await mockEnrich(program) : await llmEnrich(program);
       enriched.push(result);
 
-      // Rate limiting
       if (!USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        cache[key] = {
+          description: result.description,
+          career: result.career,
+          interests: result.interests,
+          strengths: result.strengths,
+          work_style: result.work_style,
+        };
+        saveCache(cache);
+        // Rate limiting: be gentle with the API.
+        await new Promise((resolve) => setTimeout(resolve, 350));
       }
     } catch (err) {
-      console.error(`    Fehler bei ${program.name}: ${err.message}`);
+      console.error(`    ❌ Fehler bei ${label}: ${err.message}`);
       enriched.push(program);
+      failed++;
     }
   }
 
   fs.writeFileSync(outputPath, JSON.stringify(enriched, null, 2), 'utf8');
-  console.log(`\nFertig. Ausgabe: ${outputPath}`);
+
+  console.log(`\n✅ Fertig.`);
+  console.log(`   Ausgabe: ${outputPath}`);
+  console.log(`   Erfolgreich: ${programs.length - failed - skipped}, Fehler: ${failed}, Aus Cache: ${skipped}`);
+  console.log(`   Cache: ${cachePath}`);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error('Unerwarteter Fehler:', err);
+  process.exit(1);
+});

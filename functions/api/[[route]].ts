@@ -47,7 +47,16 @@ interface Env {
   AI: Ai;
   ENVIRONMENT?: string;
   ADMIN_API_KEY?: string;
+  // Email provider config (default: resend)
+  EMAIL_PROVIDER?: string;
+  EMAIL_FROM?: string;
+  // Provider-specific API keys
   RESEND_API_KEY?: string;
+  BREVO_API_KEY?: string;
+  SENDGRID_API_KEY?: string;
+  AWS_SES_ACCESS_KEY?: string;
+  AWS_SES_SECRET_KEY?: string;
+  AWS_SES_REGION?: string;
 }
 
 const app = new Hono<{ Bindings: Env }>().basePath('/api');
@@ -214,11 +223,6 @@ app.post('/share/email', async (c) => {
     throw new HTTPException(400, { message: 'Gültige E-Mail-Adresse erforderlich' });
   }
 
-  const resendKey = c.env.RESEND_API_KEY;
-  if (!resendKey) {
-    throw new HTTPException(503, { message: 'E-Mail-Versand ist aktuell nicht konfiguriert.' });
-  }
-
   const recommendations = await fetchRecommendations(c.env.DB, sessionId);
   if (!recommendations || recommendations.length === 0) {
     throw new HTTPException(404, { message: 'Keine Empfehlungen gefunden' });
@@ -229,33 +233,24 @@ app.post('/share/email', async (c) => {
   const html = buildRecommendationEmail(recommendations, shareUrl);
   const text = buildRecommendationEmailText(recommendations, shareUrl);
 
-  try {
-    const resendRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${resendKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'abivio <noreply@abivio.de>',
-        to: email,
-        subject,
-        html,
-        text,
-      }),
-    });
+  const provider = createEmailProvider(c.env);
+  if (!provider) {
+    throw new HTTPException(503, { message: 'E-Mail-Versand ist aktuell nicht konfiguriert.' });
+  }
 
-    if (!resendRes.ok) {
-      const errText = await resendRes.text();
-      console.error('resend error', resendRes.status, errText);
-      throw new HTTPException(502, { message: 'E-Mail konnte nicht versendet werden.' });
-    }
+  try {
+    await provider.sendEmail({
+      to: email,
+      subject,
+      html,
+      text,
+    });
 
     return c.json({ success: true, message: 'Empfehlungen wurden an deine E-Mail gesendet.' });
   } catch (err: any) {
-    if (err instanceof HTTPException) throw err;
     console.error('email send error', err);
-    throw new HTTPException(500, { message: 'E-Mail-Versand fehlgeschlagen.' });
+    const message = err instanceof HTTPException ? err.message : 'E-Mail-Versand fehlgeschlagen.';
+    throw new HTTPException(502, { message });
   }
 });
 
@@ -955,6 +950,154 @@ Warum das passt: ${rec.reasoning}`;
     .join('\n\n');
 
   return `Deine abivio-Empfehlungen\n\n${items}\n\nOnline ansehen: ${shareUrl}\n\nDiese E-Mail wurde auf Wunsch von abivio.de versendet.`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Email provider abstraction
+// Supports: resend (default), brevo, sendgrid, aws-ses
+// Add new providers here without touching /api/share/email
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface EmailMessage {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}
+
+interface EmailProvider {
+  sendEmail(message: EmailMessage): Promise<void>;
+}
+
+function getDefaultFrom(env: Env): string {
+  return env.EMAIL_FROM || 'abivio <noreply@abivio.de>';
+}
+
+function createEmailProvider(env: Env): EmailProvider | null {
+  const provider = (env.EMAIL_PROVIDER || 'resend').toLowerCase();
+
+  switch (provider) {
+    case 'resend':
+      return env.RESEND_API_KEY ? new ResendEmailProvider(env.RESEND_API_KEY, getDefaultFrom(env)) : null;
+    case 'brevo':
+      return env.BREVO_API_KEY ? new BrevoEmailProvider(env.BREVO_API_KEY, getDefaultFrom(env)) : null;
+    case 'sendgrid':
+      return env.SENDGRID_API_KEY ? new SendgridEmailProvider(env.SENDGRID_API_KEY, getDefaultFrom(env)) : null;
+    case 'aws-ses':
+      return env.AWS_SES_ACCESS_KEY && env.AWS_SES_SECRET_KEY
+        ? new AwsSesEmailProvider(env.AWS_SES_ACCESS_KEY, env.AWS_SES_SECRET_KEY, env.AWS_SES_REGION || 'eu-central-1', getDefaultFrom(env))
+        : null;
+    default:
+      console.error(`Unknown email provider: ${provider}`);
+      return null;
+  }
+}
+
+class ResendEmailProvider implements EmailProvider {
+  constructor(private apiKey: string, private from: string) {}
+
+  async sendEmail(message: EmailMessage): Promise<void> {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: this.from,
+        to: message.to,
+        subject: message.subject,
+        html: message.html,
+        text: message.text,
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('resend error', response.status, errText);
+      throw new HTTPException(502, { message: 'E-Mail konnte nicht versendet werden.' });
+    }
+  }
+}
+
+class BrevoEmailProvider implements EmailProvider {
+  constructor(private apiKey: string, private from: string) {}
+
+  async sendEmail(message: EmailMessage): Promise<void> {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': this.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: parseSender(this.from),
+        to: [{ email: message.to }],
+        subject: message.subject,
+        htmlContent: message.html,
+        textContent: message.text,
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('brevo error', response.status, errText);
+      throw new HTTPException(502, { message: 'E-Mail konnte nicht versendet werden.' });
+    }
+  }
+}
+
+class SendgridEmailProvider implements EmailProvider {
+  constructor(private apiKey: string, private from: string) {}
+
+  async sendEmail(message: EmailMessage): Promise<void> {
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: message.to }] }],
+        from: parseSender(this.from),
+        subject: message.subject,
+        content: [
+          { type: 'text/plain', value: message.text },
+          { type: 'text/html', value: message.html },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('sendgrid error', response.status, errText);
+      throw new HTTPException(502, { message: 'E-Mail konnte nicht versendet werden.' });
+    }
+  }
+}
+
+class AwsSesEmailProvider implements EmailProvider {
+  constructor(
+    private accessKey: string,
+    private secretKey: string,
+    private region: string,
+    private from: string
+  ) {}
+
+  async sendEmail(message: EmailMessage): Promise<void> {
+    // AWS SES requires signed requests. For now we throw a clear error directing
+    // future implementers to add AWS Signature v4 signing.
+    console.error('AWS SES provider selected but not fully implemented');
+    throw new HTTPException(501, { message: 'AWS SES-Versand ist noch nicht implementiert.' });
+  }
+}
+
+function parseSender(from: string): { name?: string; email: string } {
+  const match = from.match(/^(.*?)\s*<(.+)>$/);
+  if (match) {
+    return { name: match[1].trim() || undefined, email: match[2].trim() };
+  }
+  return { email: from.trim() };
 }
 
 export const onRequest = handle(app);

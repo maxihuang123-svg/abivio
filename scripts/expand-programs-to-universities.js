@@ -105,7 +105,35 @@ function escapeSql(value) {
   if (value === null || value === undefined) return 'NULL';
   if (typeof value === 'boolean') return value ? '1' : '0';
   if (typeof value === 'number') return value;
-  return "'" + String(value).replace(/'/g, "''") + "'";
+  return charEncode(String(value));
+}
+
+function charEncode(text) {
+  if (text === '') return "''";
+  let result = '';
+  let literalPart = '';
+
+  function flushLiteral() {
+    if (literalPart.length > 0) {
+      if (result.length > 0) result += ' || ';
+      result += `'${literalPart.replace(/'/g, "''")}'`;
+      literalPart = '';
+    }
+  }
+
+  for (const char of text) {
+    const code = char.charCodeAt(0);
+    if (code > 127) {
+      flushLiteral();
+      if (result.length > 0) result += ' || ';
+      result += `char(${code})`;
+    } else {
+      literalPart += char;
+    }
+  }
+
+  flushLiteral();
+  return result === '' ? "''" : result;
 }
 
 function generateSql(programs) {
