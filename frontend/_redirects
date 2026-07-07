@@ -1,0 +1,5 @@
+# Redirect all functional pages to the under-construction landing page.
+# Using 302 (temporary) so search engines know this is not permanent.
+/app.html /index.html 302
+/data-explorer.html /index.html 302
+/quiz /index.html 302
