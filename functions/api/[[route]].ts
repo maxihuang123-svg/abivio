@@ -1126,6 +1126,43 @@ app.onError((err, c) => {
   return c.json({ error: 'Interner Serverfehler' }, 500);
 });
 
+// Hard-coded safety blocklist for programs that are known to be invalid,
+// Master-only, or not offered as Bachelor degrees in Germany. Acts as a
+// safety net even if stale data remains in the database.
+const BLOCKED_PROGRAM_NAMES = new Set([
+  'Hüttenwesen',
+  'Robotik',
+  'Cloud Computing',
+  'Blockchain-Technologie',
+  'Human-Computer Interaction',
+  'Data Engineering',
+  'Machine Learning',
+  'Bergbau',
+  'Raumfahrttechnik',
+  'Tiefbau',
+  'Wasserwesen',
+  'Gebäudetechnik',
+  'Feinwerktechnik',
+  'Schiffbau',
+  'Optotechnik',
+  'Möbeldesign',
+  'Radiojournalismus',
+  'Fernsehjournalismus',
+  'Crossmedia',
+  'Gemeindediakonie',
+  'Nonprofit-Management',
+  'Schauspiel',
+  'Regie',
+  'Tanz',
+  'Fotografie',
+]);
+
+function isBlockedProgram(program: Program): boolean {
+  // Strip the "(City)" suffix that the expand script adds before matching.
+  const baseName = program.name.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  return BLOCKED_PROGRAM_NAMES.has(baseName) || BLOCKED_PROGRAM_NAMES.has(program.name.trim());
+}
+
 // Recommendation engine
 async function computeRecommendations(db: D1Database, answers: QuizAnswers) {
   const { results } = await db.prepare(`
@@ -1133,7 +1170,7 @@ async function computeRecommendations(db: D1Database, answers: QuizAnswers) {
     FROM programs p
     LEFT JOIN universities u ON p.university_id = u.hs_number
   `).all<Program>();
-  const programs = results || [];
+  const programs = (results || []).filter((p) => !isBlockedProgram(p));
 
   const userInterests = answers.interests || [];
   const userStrengths = answers.strengths || [];

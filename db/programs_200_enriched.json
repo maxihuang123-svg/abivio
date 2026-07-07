@@ -140,20 +140,6 @@
     "work_style": "[\"analytisch\",\"kreativ\",\"teamfaehig\"]"
   },
   {
-    "name": "Robotik",
-    "field": "Technik & IT",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2,
-    "description": "Der Bachelorstudiengang Robotik vereint technische Grundlagen mit praktischen Anwendungen in der Automatisierung und intelligenten Systemen, fokussiert auf die Entwicklung und Programmierung von Robotern.",
-    "career": "Roboterprogrammierer, Automatisierungstechniker, Forschungsingenieur, Systementwickler, Technischer Projektleiter",
-    "interests": "[\"technik\",\"natur\",\"digitales\",\"forschung\",\"gesellschaft\"]",
-    "strengths": "[\"mathematik\",\"informatik\",\"physik\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
     "name": "Game Design",
     "field": "Technik & IT",
     "degree": "Bachelor",
@@ -182,48 +168,6 @@
     "work_style": "[\"analytisch\",\"problemloesend\",\"teamfaehig\"]"
   },
   {
-    "name": "Cloud Computing",
-    "field": "Technik & IT",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.3,
-    "description": "Der Bachelorstudiengang Cloud Computing vermittelt umfassende Kenntnisse in der Entwicklung, Implementierung und Verwaltung von Cloud-basierten Lösungen und hebt sich durch praxisnahe Projekte und innovative Technologien ab.",
-    "career": "Cloud-Architekt, DevOps-Ingenieur, Cloud-Sicherheitsanalyst, IT-Consultant für Cloud-Lösungen, Systemadministrator für Cloud-Infrastrukturen",
-    "interests": "[\"technik\",\"digitales\",\"management\",\"unternehmertum\",\"daten\"]",
-    "strengths": "[\"informatik\",\"mathematik\",\"wirtschaft\"]",
-    "work_style": "[\"analytisch\",\"strukturiert\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Blockchain-Technologie",
-    "field": "Technik & IT",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.5,
-    "description": "Der Bachelorstudiengang Blockchain-Technologie vermittelt umfassende Kenntnisse über die Entwicklung und Implementierung von Blockchain-Lösungen, fokussiert auf Sicherheit, Dezentralisierung und innovative Anwendungen.",
-    "career": "Blockchain-Entwickler, Blockchain-Consultant, Projektmanager für Blockchain-Projekte, Compliance-Manager im Blockchain-Bereich, Researcher für Blockchain-Technologien",
-    "interests": "[\"technik\",\"wirtschaft\",\"digitales\",\"unternehmertum\",\"gesellschaft\"]",
-    "strengths": "[\"informatik\",\"mathematik\",\"wirtschaft\"]",
-    "work_style": "[\"analytisch\",\"problemloesend\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Human-Computer Interaction",
-    "field": "Technik & IT",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.5,
-    "description": "Der Studiengang Human-Computer Interaction fokussiert sich auf die Gestaltung und Optimierung der Interaktion zwischen Mensch und Technologie, kombiniert psychologische und technische Aspekte.",
-    "career": "Usability-Experte, Interaction Designer, UX Researcher, Produktmanager, Softwareentwickler mit Schwerpunkt User Experience",
-    "interests": "[\"technik\",\"gesellschaft\",\"kreativ\",\"mensch\",\"digitales\"]",
-    "strengths": "[\"informatik\",\"kunst\",\"sozialkunde\"]",
-    "work_style": "[\"kreativ\",\"analytisch\",\"teamfaehig\"]"
-  },
-  {
     "name": "IT-Sicherheit",
     "field": "Technik & IT",
     "degree": "Bachelor",
@@ -236,34 +180,6 @@
     "interests": "[\"technik\",\"recht\",\"digitales\",\"gesellschaft\",\"daten\"]",
     "strengths": "[\"informatik\",\"mathematik\",\"physik\"]",
     "work_style": "[\"analytisch\",\"detailorientiert\",\"problemloesend\"]"
-  },
-  {
-    "name": "Data Engineering",
-    "field": "Technik & IT",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.3,
-    "description": "Der Bachelorstudiengang Data Engineering fokussiert sich auf die Entwicklung und Verwaltung von Dateninfrastrukturen, um große Datenmengen effizient zu verarbeiten und nutzbar zu machen. Er hebt sich durch praxisnahe Projekte und moderne Technologien ab.",
-    "career": "Data Engineer, Datenbankadministrator, Big Data Analyst, Business Intelligence Entwickler, Cloud Data Engineer",
-    "interests": "[\"technik\",\"daten\",\"digitales\",\"strategie\",\"unternehmertum\"]",
-    "strengths": "[\"mathematik\",\"informatik\",\"wirtschaft\"]",
-    "work_style": "[\"analytisch\",\"strukturierte\",\"problemloesend\"]"
-  },
-  {
-    "name": "Machine Learning",
-    "field": "Technik & IT",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.2,
-    "description": "Der Bachelorstudiengang Machine Learning vermittelt praxisnahe Kenntnisse in der Entwicklung und Anwendung von Algorithmen zur Mustererkennung und Entscheidungsfindung, fokussiert auf datengetriebene Problemlösungen.",
-    "career": "Data Scientist, Machine Learning Engineer, KI-Entwickler, Forschungsingenieur, Business Analyst",
-    "interests": "[\"technik\",\"daten\",\"forschung\",\"digitales\",\"gesellschaft\"]",
-    "strengths": "[\"mathematik\",\"informatik\",\"physik\"]",
-    "work_style": "[\"analytisch\",\"problemloesend\",\"teamfaehig\"]"
   },
   {
     "name": "Computer Science",
@@ -588,34 +504,6 @@
     "work_style": "[\"analytisch\",\"experimentell\",\"teamfaehig\"]"
   },
   {
-    "name": "Optotechnik",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.6,
-    "description": "Der Studiengang Optotechnik verbindet Ingenieurwissenschaften mit optischen Technologien und fokussiert sich auf die Entwicklung und Anwendung von optischen Systemen, was ihn von anderen Ingenieurdisziplinen abhebt.",
-    "career": "Optikingenieur, Produktentwickler für optische Systeme, Forschungsingenieur in der Photonik, Anwendungstechniker für optische Messsysteme, Berater für optische Technologien",
-    "interests": "[\"technik\",\"natur\",\"forschung\",\"design\",\"digitales\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"informatik\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Schiffbau",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.8,
-    "description": "Der Studiengang Schiffbau kombiniert ingenieurtechnische Grundlagen mit spezifischem Wissen über Schiffsdesign, Konstruktion und maritime Technologien, wodurch Absolventen auf die besonderen Herausforderungen der Schifffahrt vorbereitet werden.",
-    "career": "Schiffbauingenieur, Projektmanager in der Schifffahrtsindustrie, Konstrukteur für maritime Systeme, Qualitätsmanager in der Schiffsproduktion, Forschung und Entwicklung im Bereich Schiffstechnik",
-    "interests": "[\"technik\",\"fahrzeuge\",\"natur\",\"umwelt\",\"design\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"informatik\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
     "name": "Verkehrsingenieurwesen",
     "field": "Ingenieurwesen",
     "degree": "Bachelor",
@@ -628,48 +516,6 @@
     "interests": "[\"technik\",\"wirtschaft\",\"gesellschaft\",\"umwelt\",\"nachhaltigkeit\"]",
     "strengths": "[\"mathematik\",\"physik\",\"geografie\"]",
     "work_style": "[\"analytisch\",\"strukturiert\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Gebäudetechnik",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 3,
-    "description": "Der Studiengang Gebäudetechnik fokussiert sich auf die Planung, den Bau und die Optimierung von Gebäuden unter Berücksichtigung von Energieeffizienz und Nachhaltigkeit, was ihn von anderen Ingenieurstudiengängen abhebt.",
-    "career": "Gebäudetechniker, Energieberater, Projektmanager für Bauprojekte, Fachplaner für technische Gebäudeausrüstung, Nachhaltigkeitsmanager",
-    "interests": "[\"technik\",\"energie\",\"nachhaltigkeit\",\"gesellschaft\",\"umwelt\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"wirtschaft\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Tiefbau",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.9,
-    "description": "Der Studiengang Tiefbau vermittelt fundierte Kenntnisse in der Planung und Konstruktion von Infrastrukturprojekten wie Straßen, Brücken und Wasserbauanlagen, mit einem starken Fokus auf nachhaltige Lösungen.",
-    "career": "Bauingenieur, Projektleiter im Tiefbau, Verkehrsplaner, Bauleiter, Ingenieur für Wasserwirtschaft",
-    "interests": "[\"technik\",\"umwelt\",\"gesellschaft\",\"nachhaltigkeit\",\"struktur\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"geografie\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Wasserwesen",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.9,
-    "description": "Der Studiengang Wasserwesen verbindet ingenieurtechnische Aspekte mit ökologischen und nachhaltigen Fragestellungen im Umgang mit Wasserressourcen und ist somit einzigartig im Ingenieurwesen.",
-    "career": "Wasserbauingenieur, Umwelttechniker, Hydrologe, Projektmanager für Wasserprojekte, Berater für Wassermanagement",
-    "interests": "[\"technik\",\"natur\",\"umwelt\",\"nachhaltigkeit\",\"gesellschaft\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"geografie\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
   },
   {
     "name": "Produktionstechnik",
@@ -686,20 +532,6 @@
     "work_style": "[\"analytisch\",\"strukturiert\",\"teamfaehig\"]"
   },
   {
-    "name": "Feinwerktechnik",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.7,
-    "description": "Der Studiengang Feinwerktechnik vereint präzise Mechanik mit modernster Elektronik und ist somit ideal für die Entwicklung hochkomplexer Systeme in der Mikro- und Nanotechnologie.",
-    "career": "Entwicklungsingenieur, Qualitätsmanager, Projektleiter in der Medizintechnik, Technischer Vertriebsingenieur, Forschungs- und Entwicklungsingenieur",
-    "interests": "[\"technik\",\"medizin\",\"natur\",\"forschung\",\"design\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"informatik\"]",
-    "work_style": "[\"analytisch\",\"detailorientiert\",\"problemloesend\"]"
-  },
-  {
     "name": "Textiltechnik",
     "field": "Ingenieurwesen",
     "degree": "Bachelor",
@@ -712,48 +544,6 @@
     "interests": "[\"technik\",\"kreativ\",\"design\",\"nachhaltigkeit\",\"gesellschaft\"]",
     "strengths": "[\"mathematik\",\"physik\",\"chemie\"]",
     "work_style": "[\"analytisch\",\"praktisch\",\"kreativ\"]"
-  },
-  {
-    "name": "Bergbau",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 3,
-    "description": "Der Studiengang Bergbau verbindet ingenieurtechnisches Wissen mit geowissenschaftlichen Aspekten und fokussiert sich auf die nachhaltige Gewinnung von Rohstoffen, wodurch er sich deutlich von anderen Ingenieurstudiengängen abhebt.",
-    "career": "Bergbauingenieur, Geotechniker, Rohstoffmanager, Umweltingenieur, Sicherheitsbeauftragter im Bergbau",
-    "interests": "[\"technik\",\"natur\",\"umwelt\",\"nachhaltigkeit\",\"wirtschaft\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"geografie\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Hüttenwesen",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 3,
-    "description": "Der Studiengang Hüttenwesen vermittelt fundierte Kenntnisse in der Metallurgie und der Verarbeitung von Rohstoffen, fokussiert sich jedoch stärker auf die ökologischen und wirtschaftlichen Aspekte der Metallindustrie als verwandte Ingenieurstudiengänge.",
-    "career": "Hütteningenieur, Qualitätsmanager in der Metallindustrie, Umweltingenieur, Projektleiter in der Rohstoffverarbeitung, Berater für nachhaltige Produktionsprozesse",
-    "interests": "[\"technik\",\"wirtschaft\",\"umwelt\",\"nachhaltigkeit\",\"forschung\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"chemie\"]",
-    "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Raumfahrttechnik",
-    "field": "Ingenieurwesen",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.2,
-    "description": "Der Studiengang Raumfahrttechnik kombiniert Ingenieurwissen mit spezifischen Anwendungen in der Raumfahrt, fokussiert auf die Entwicklung von Raumfahrzeugen, Satelliten und deren Systeme.",
-    "career": "Raumfahrtingenieur, Satellitentechniker, Systemingenieur für Raumfahrtprojekte, Forschungsingenieur in der Raumfahrtindustrie, Projektmanager für Raumfahrtmissionen",
-    "interests": "[\"technik\",\"natur\",\"forschung\",\"digitales\",\"umwelt\"]",
-    "strengths": "[\"mathematik\",\"physik\",\"informatik\"]",
-    "work_style": "[\"analytisch\",\"teamfaehig\",\"problemloesend\"]"
   },
   {
     "name": "Technisches Management",
@@ -1274,20 +1064,6 @@
     "work_style": "[\"analytisch\",\"empathisch\",\"teamfaehig\"]"
   },
   {
-    "name": "Zahnmedizin",
-    "field": "Medizin & Gesundheit",
-    "degree": "Bachelor",
-    "duration_semesters": 10,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 1.1,
-    "description": "Der Studiengang Zahnmedizin vermittelt umfassende Kenntnisse in der Diagnostik, Therapie und Prävention von Zahn- und Mundkrankheiten und hebt sich durch praxisnahe Ausbildung und klinische Erfahrungen ab.",
-    "career": "Zahnarzt, Kieferorthopäde, Oralchirurg, Zahntechniker, Forschung im Bereich Zahnmedizin",
-    "interests": "[\"medizin\",\"gesundheit\",\"handwerk\",\"mensch\",\"gesellschaft\"]",
-    "strengths": "[\"biologie\",\"chemie\",\"physik\"]",
-    "work_style": "[\"praktisch\",\"kommunikativ\",\"detailorientiert\"]"
-  },
-  {
     "name": "Molekulare Medizin",
     "field": "Medizin & Gesundheit",
     "degree": "Bachelor",
@@ -1482,20 +1258,6 @@
     "interests": "[\"medizin\",\"natur\",\"gesundheit\",\"forschung\",\"umwelt\"]",
     "strengths": "[\"biologie\",\"chemie\",\"mathematik\"]",
     "work_style": "[\"analytisch\",\"experimentell\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Pharmazie",
-    "field": "Naturwissenschaften",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 1.4,
-    "description": "Der Studiengang Pharmazie verbindet naturwissenschaftliche Grundlagen mit praktischen Anwendungen in der Arzneimittelentwicklung und -therapie, wodurch er sich klar von anderen naturwissenschaftlichen Studiengängen abhebt.",
-    "career": "Apotheker, Pharmazeutischer Wissenschaftler, Qualitätskontrolleur, Arzneimittelberater, Forschung und Entwicklung in der Pharmaindustrie",
-    "interests": "[\"medizin\",\"gesundheit\",\"forschung\",\"natur\",\"gesellschaft\"]",
-    "strengths": "[\"chemie\",\"biologie\",\"mathematik\"]",
-    "work_style": "[\"analytisch\",\"detailorientiert\",\"teamfaehig\"]"
   },
   {
     "name": "Geowissenschaften",
@@ -1750,20 +1512,6 @@
     "work_style": "[\"kreativ\",\"praktisch\",\"teamfaehig\"]"
   },
   {
-    "name": "Möbeldesign",
-    "field": "Design",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.8,
-    "description": "Der Studiengang Möbeldesign fokussiert sich auf die kreative und funktionale Gestaltung von Möbeln, unter Berücksichtigung von Ergonomie, Materialkunde und Nachhaltigkeit. Er hebt sich durch praxisnahe Projekte und innovative Designmethoden ab.",
-    "career": "Möbeldesigner, Produktentwickler, Innenarchitekt, Designberater, Projektmanager im Möbelbau",
-    "interests": "[\"design\",\"kreativ\",\"handwerk\",\"nachhaltigkeit\",\"gesellschaft\"]",
-    "strengths": "[\"kunst\",\"mathematik\",\"physik\"]",
-    "work_style": "[\"kreativ\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
     "name": "Visuelle Kommunikation",
     "field": "Design",
     "degree": "Bachelor",
@@ -1846,62 +1594,6 @@
     "interests": "[\"gesellschaft\",\"kommunikation\",\"kultur\",\"digitales\",\"strategien\"]",
     "strengths": "[\"deutsch\",\"englisch\",\"wirtschaft\"]",
     "work_style": "[\"kommunikativ\",\"kreativ\",\"zielorientiert\"]"
-  },
-  {
-    "name": "Digitale Medien",
-    "field": "Medien",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.5,
-    "description": "Der Bachelorstudiengang Digitale Medien fokussiert sich auf die Entwicklung, Gestaltung und Anwendung digitaler Inhalte und Technologien, wobei ein starker Praxisbezug und interdisziplinäre Ansätze im Vordergrund stehen.",
-    "career": "Mediengestalter, UX/UI-Designer, Digital Marketing Manager, Content Creator, Social Media Manager",
-    "interests": "[\"technik\",\"kreativ\",\"digitales\",\"medien\",\"kommunikation\"]",
-    "strengths": "[\"informatik\",\"kunst\",\"wirtschaft\"]",
-    "work_style": "[\"kreativ\",\"teamfaehig\",\"analytisch\"]"
-  },
-  {
-    "name": "Radiojournalismus",
-    "field": "Medien",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.6,
-    "description": "Der Bachelorstudiengang Radiojournalismus vermittelt praxisnahe Kenntnisse in der Erstellung, Produktion und Präsentation von Radiobeiträgen und hebt sich durch einen starken Fokus auf Audio-Storytelling und journalistische Ethik ab.",
-    "career": "Radiojournalist, Redakteur für Hörfunk, Produzent für Audioformate, Moderator, Medienmanager",
-    "interests": "[\"medien\",\"kommunikation\",\"gesellschaft\",\"kultur\"]",
-    "strengths": "[\"deutsch\",\"musik\",\"sozialkunde\"]",
-    "work_style": "[\"kreativ\",\"kommunikativ\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Fernsehjournalismus",
-    "field": "Medien",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.6,
-    "description": "Der Studiengang Fernsehjournalismus vermittelt praxisnahe Kenntnisse in der Erstellung von TV-Beiträgen, Reportagen und Nachrichten, fokussiert auf visuelle Erzähltechniken und journalistische Ethik.",
-    "career": "Fernsehjournalist, Redakteur für TV-Formate, Produzent, Moderator, Medienberater",
-    "interests": "[\"medien\",\"gesellschaft\",\"kultur\",\"kommunikation\",\"politik\"]",
-    "strengths": "[\"deutsch\",\"geschichte\",\"kunst\"]",
-    "work_style": "[\"kreativ\",\"kommunikativ\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Crossmedia",
-    "field": "Medien",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.5,
-    "description": "Der Bachelorstudiengang Crossmedia vermittelt die Fähigkeit, Inhalte über verschiedene Medienplattformen hinweg zu entwickeln und zu gestalten, wobei ein besonderer Fokus auf interaktive und nutzerzentrierte Ansätze gelegt wird.",
-    "career": "Crossmedia-Producer, Content-Strategist, Social Media Manager, Multimedia-Designer, Kommunikationsberater",
-    "interests": "[\"medien\",\"kreativ\",\"gesellschaft\",\"digitales\",\"kommunikation\"]",
-    "strengths": "[\"kunst\",\"deutsch\",\"informatik\"]",
-    "work_style": "[\"kreativ\",\"kommunikativ\",\"analytisch\"]"
   },
   {
     "name": "Medienproduktion",
@@ -2100,20 +1792,6 @@
     "work_style": "[\"empathisch\",\"kommunikativ\",\"teamfaehig\"]"
   },
   {
-    "name": "Gemeindediakonie",
-    "field": "Soziales",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": false,
-    "nc_grade": null,
-    "description": "Der Studiengang Gemeindediakonie vermittelt spezifische Kenntnisse in der sozialen Arbeit innerhalb von Gemeinden, fokussiert auf die Integration von Menschen und die Förderung von Gemeinschaftsprojekten.",
-    "career": "Gemeindediakon, Sozialarbeiter in kirchlichen Einrichtungen, Projektleiter für soziale Initiativen, Berater für Gemeindeentwicklung, Bildungsreferent in der Erwachsenenbildung",
-    "interests": "[\"gesellschaft\",\"mensch\",\"sozial\",\"bildung\",\"kultur\"]",
-    "strengths": "[\"sozialkunde\",\"geschichte\",\"religion\"]",
-    "work_style": "[\"empathisch\",\"kommunikativ\",\"teamfaehig\"]"
-  },
-  {
     "name": "Interkulturelle Bildung",
     "field": "Soziales",
     "degree": "Bachelor",
@@ -2140,20 +1818,6 @@
     "interests": "[\"gesellschaft\",\"recht\",\"forschung\",\"politik\",\"sozial\"]",
     "strengths": "[\"sozialkunde\",\"psychologie\",\"geschichte\"]",
     "work_style": "[\"analytisch\",\"kommunikativ\",\"problemloesend\"]"
-  },
-  {
-    "name": "Nonprofit-Management",
-    "field": "Soziales",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.7,
-    "description": "Der Bachelorstudiengang Nonprofit-Management vermittelt praxisnahe Kenntnisse in der Führung und Organisation von Nonprofit-Organisationen und hebt sich durch seinen Fokus auf soziale Innovation und nachhaltige Entwicklung ab.",
-    "career": "Projektmanager in Nonprofit-Organisationen, Fundraising-Manager, Berater für soziale Unternehmen, Leiter von sozialen Initiativen, Policy-Analyst im Nonprofit-Sektor",
-    "interests": "[\"gesellschaft\",\"management\",\"nachhaltigkeit\",\"politik\",\"beratung\"]",
-    "strengths": "[\"wirtschaft\",\"sozialkunde\",\"deutsch\"]",
-    "work_style": "[\"kommunikativ\",\"teamfaehig\",\"zielorientiert\"]"
   },
   {
     "name": "Geschichte",
@@ -2408,62 +2072,6 @@
     "work_style": "[\"kreativ\",\"teamfaehig\",\"kommunikativ\"]"
   },
   {
-    "name": "Schauspiel",
-    "field": "Kunst",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.5,
-    "description": "Der Bachelorstudiengang Schauspiel vermittelt umfassende schauspielerische Fähigkeiten, Kreativität und Bühnenpräsenz, fokussiert auf die Entwicklung individueller Ausdrucksformen und die Interpretation von Texten.",
-    "career": "Schauspieler, Regisseur, Theaterpädagoge, Dramaturg, Sprecher",
-    "interests": "[\"kultur\",\"gesellschaft\",\"kreativ\",\"kunst\",\"medien\"]",
-    "strengths": "[\"deutsch\",\"kunst\",\"musik\"]",
-    "work_style": "[\"kreativ\",\"kommunikativ\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Regie",
-    "field": "Kunst",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.6,
-    "description": "Der Bachelorstudiengang Regie vermittelt einzigartige Fähigkeiten in der kreativen Leitung von Film, Theater und Medienproduktionen, fokussiert auf die Entwicklung von Erzählstrukturen und visueller Gestaltung.",
-    "career": "Regisseur, Drehbuchautor, Produktionsleiter, Theaterintendant, Mediengestalter",
-    "interests": "[\"kreativ\",\"kultur\",\"medien\",\"gesellschaft\",\"kommunikation\"]",
-    "strengths": "[\"kunst\",\"deutsch\",\"geschichte\"]",
-    "work_style": "[\"kreativ\",\"kommunikativ\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Tanz",
-    "field": "Kunst",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.7,
-    "description": "Der Studiengang Tanz vermittelt eine umfassende Ausbildung in zeitgenössischem Tanz, Choreografie und Performance, wobei der Fokus auf kreativen Ausdrucksformen und der Körperarbeit liegt.",
-    "career": "Tanzpädagoge, Choreograf, Tanztherapeut, Tänzer, Kulturmanager",
-    "interests": "[\"kultur\",\"gesellschaft\",\"kreativ\",\"kunst\",\"sport\"]",
-    "strengths": "[\"kunst\",\"sport\",\"musik\"]",
-    "work_style": "[\"kreativ\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Fotografie",
-    "field": "Kunst",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.6,
-    "description": "Der Bachelorstudiengang Fotografie vermittelt umfassende technische und kreative Fähigkeiten in der Bildgestaltung und -bearbeitung, fokussiert auf die Entwicklung eines individuellen künstlerischen Stils.",
-    "career": "Fotograf, Bildredakteur, Kunstkurator, Fotodesigner, Mediengestalter",
-    "interests": "[\"kreativ\",\"kunst\",\"medien\",\"gesellschaft\",\"design\"]",
-    "strengths": "[\"kunst\",\"informatik\",\"deutsch\"]",
-    "work_style": "[\"kreativ\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
     "name": "Umweltwissenschaften",
     "field": "Umwelt",
     "degree": "Bachelor",
@@ -2588,20 +2196,6 @@
     "interests": "[\"gesundheit\",\"sport\",\"gesellschaft\",\"forschung\",\"bildung\"]",
     "strengths": "[\"biologie\",\"sport\",\"mathematik\"]",
     "work_style": "[\"analytisch\",\"praktisch\",\"teamfaehig\"]"
-  },
-  {
-    "name": "Sportmanagement",
-    "field": "Sport",
-    "degree": "Bachelor",
-    "duration_semesters": 6,
-    "language": "de",
-    "nc_required": true,
-    "nc_grade": 2.6,
-    "description": "Der Bachelor in Sportmanagement vereint betriebswirtschaftliche Kenntnisse mit spezifischen Aspekten des Sportsektors und bereitet auf Führungsaufgaben in der Sportbranche vor.",
-    "career": "Sportmanager, Eventkoordinator im Sport, Marketing-Manager im Sport, Facility-Manager für Sporteinrichtungen, Sportconsultant",
-    "interests": "[\"wirtschaft\",\"management\",\"sport\",\"gesellschaft\",\"unternehmertum\"]",
-    "strengths": "[\"wirtschaft\",\"sport\",\"sozialkunde\"]",
-    "work_style": "[\"analytisch\",\"kommunikativ\",\"teamfaehig\"]"
   },
   {
     "name": "Sport und Gesundheit",
