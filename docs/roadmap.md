@@ -19,28 +19,28 @@ Diese Roadmap basiert auf der Strategie in `docs/strategy.md` und dem aktuellen 
 
 | # | Aufgabe | Priorität | Status |
 |---|---------|-----------|--------|
-| 0.1 | `abivio.de` als Custom Domain in Cloudflare verbinden | Hoch | Offen |
-| 0.2 | GitHub-Collaborator einladen | Hoch | Offen |
+| 0.1 | `abivio.de` als Custom Domain in Cloudflare verbinden | Hoch | ✅ Erledigt |
+| 0.2 | GitHub-Repository mit Cloudflare Pages verknüpfen | Hoch | ✅ Erledigt |
 | 0.3 | Impressum & Datenschutz finalisieren | Hoch | Offen |
 | 0.4 | Analytics/Tracking einbauen (z. B. Cloudflare Web Analytics oder Plausible) | Hoch | Offen |
-| 0.5 | Lokale Dev-Umgebung dokumentieren (`npm run dev`, `db:reset`) | Mittel | Offen |
-| 0.6 | README aktualisieren (Domain-Status, aktuelle Befehle, Nächste Schritte) | Mittel | Offen |
+| 0.5 | Lokale Dev-Umgebung dokumentieren (`npm run dev`, `db:reset`) | Mittel | ✅ Erledigt |
+| 0.6 | README aktualisieren (Domain-Status, aktuelle Befehle, Nächste Schritte) | Mittel | ✅ Erledigt |
 
-**Meilenstein:** Domain ist erreichbar, rechtliche Grundlagen stehen, Team kann gemeinsam entwickeln.
+**Meilenstein:** Domain ist erreichbar, Git-Deploy aktiv, Team kann gemeinsam entwickeln.
 
 ---
 
 ## Phase 1 — MVP stabilisieren & Soft Launch (Woche 1–2)
 
-| # | Aufgabe | Ziel |
-|---|---------|------|
-| 1.1 | Landingpage polieren | Klarerer CTA, FAQ, Social Proof |
-| 1.2 | Waitlist-E-Mail-Bestätigung | Double-Opt-In für gültige Leads |
-| 1.3 | Quiz-UX verbessern | Fortschrittsbalken, weniger Abbrüche, Tooltips |
-| 1.4 | Ergebnisseite verbessern | Besseres Layout, Teilen-Funktion, "Merken"-Button |
-| 1.5 | Studiengangsdaten erweitern | Von 56 auf 200+ kuratierte Bachelor-Studiengänge |
-| 1.6 | Erste Nutzerinterviews durchführen | 10–15 Abiturienten/Fachabiturienten befragen |
-| 1.7 | Performance- & Mobile-Optimierung | Ladezeiten, Accessibility, Mobile-First-Design prüfen |
+| # | Aufgabe | Ziel | Status |
+|---|---------|------|--------|
+| 1.1 | Landingpage polieren | Klarerer CTA, FAQ, Social Proof | Offen |
+| 1.2 | Waitlist-E-Mail-Bestätigung | Double-Opt-In für gültige Leads | Offen |
+| 1.3 | Quiz-UX verbessern | Fortschrittsbalken, weniger Abbrüche, Tooltips | ✅ Teils erledigt |
+| 1.4 | Ergebnisseite verbessern | Besseres Layout, Teilen-Funktion, "Merken"-Button | ✅ Teilen per Link + E-Mail erledigt |
+| 1.5 | Studiengangsdaten erweitern | Von 56 auf 200+ kuratierte Bachelor-Studiengänge | ✅ Erledigt (inkl. LLM-Enrichment) |
+| 1.6 | Erste Nutzerinterviews durchführen | 10–15 Abiturienten/Fachabiturienten befragen | Offen |
+| 1.7 | Performance- & Mobile-Optimierung | Ladezeiten, Accessibility, Mobile-First-Design prüfen | Offen |
 
 **Meilenstein:** Soft Launch auf `abivio.de` mit funktionierendem Quiz, Waitlist und 200+ Studiengängen.
 
@@ -48,15 +48,15 @@ Diese Roadmap basiert auf der Strategie in `docs/strategy.md` und dem aktuellen 
 
 ## Phase 2 — Daten erweitern & Nutzerfeedback (Woche 3–4)
 
-| # | Aufgabe | Ziel |
-|---|---------|------|
-| 2.1 | Hochschul-Grundgerüst aufbauen | Alle ~400 deutschen Hochschulen importieren |
-| 2.2 | `universities`-Tabelle erweitern | Parser für `hs_liste.txt`, Typ, Bundesland, Stadt |
-| 2.3 | Geocoding | Koordinaten für Hochschulen ermitteln |
-| 2.4 | Programme mit Hochschulen verknüpfen | Studiengänge konkreten Hochschulen zuordnen |
-| 2.5 | Filter einführen | Bundesland, Hochschultyp (Uni/FH), Sprache |
-| 2.6 | Bewerbungsfristen-Übersicht | Winter-/Sommersemester, hochschulstart.de/Uni-Assist |
-| 2.7 | Feedback-Loop nach Quiz | "War diese Empfehlung hilfreich?" |
+| # | Aufgabe | Ziel | Status |
+|---|---------|------|--------|
+| 2.1 | Hochschul-Grundgerüst aufbauen | Alle ~400 deutschen Hochschulen importieren | ✅ Erledigt (32 Top-Unis + erweitertes Seed) |
+| 2.2 | `universities`-Tabelle erweitern | Parser für `hs_liste.txt`, Typ, Bundesland, Stadt | ✅ Erledigt |
+| 2.3 | Geocoding | Koordinaten für Hochschulen ermitteln | Offen |
+| 2.4 | Programme mit Hochschulen verknüpfen | Studiengänge konkreten Hochschulen zuordnen | ✅ Erledigt (~1.000 Angebote an 32 Unis) |
+| 2.5 | Filter einführen | Bundesland, Hochschultyp (Uni/FH), Sprache | Offen |
+| 2.6 | Bewerbungsfristen-Übersicht | Winter-/Sommersemester, hochschulstart.de/Uni-Assist | ✅ Basis erledigt (15.07. / 15.01.) |
+| 2.7 | Feedback-Loop nach Quiz | "War diese Empfehlung hilfreich?" | ✅ Erledigt |
 
 **Meilenstein:** Datenbank enthält Hochschulen + verknüpfte Programme, Nutzer können filtern und Fristen sehen.
 
@@ -116,11 +116,11 @@ Diese Roadmap basiert auf der Strategie in `docs/strategy.md` und dem aktuellen 
 
 ## Nächste konkrete Schritte (diese Woche)
 
-1. `abivio.de` als Custom Domain verbinden.
+1. E-Mail-Absender-Domain `noreply@abivio.de` in Resend verifizieren.
 2. Impressum & Datenschutz erstellen/finalisieren.
-3. GitHub-Collaborator einladen.
-4. Analytics/Tracking einbauen.
-5. 50–100 zusätzliche Studiengänge in `db/seed.sql` ergänzen.
+3. Analytics/Tracking einbauen (Cloudflare Web Analytics Token ersetzen).
+4. Erste Nutzerinterviews durchführen und Quiz-Matching iterieren.
+5. Rate Limiting & Abuse-Schutz für API-Endpoints vervollständigen.
 
 ---
 

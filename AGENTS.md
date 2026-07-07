@@ -14,10 +14,12 @@ Detaillierter Deutschland-Fokusplan in `docs/strategy.md`.
 - **Nicht im Fokus:** Berufsschulabsolventen ohne Hochschulreife, Studienwechsler, Master-Interessenten, internationale Bewerber
 
 ## Aktueller Status
-- Domain `abivio.de` ist bereits registriert.
-- MVP ist live auf **https://abivio.pages.dev** (Cloudflare Pages Preview).
+- Domain `abivio.de` ist registriert und mit Cloudflare Pages verbunden.
+- MVP ist live auf **https://abivio.de** und **https://abivio.pages.dev**.
 - MVP-Ziel erreicht: Soft-Launch mit Landingpage + Waitlist + interaktivem Quiz für Studienempfehlungen.
-- Eigene Domain `abivio.de` muss noch im Cloudflare-Dashboard als Custom Domain verbunden werden.
+- Datenbasis: ~1.000 studiengangsspezifische Bachelor-Angebote an 32 Top-Unis, LLM-angereichert.
+- E-Mail-Share-Funktion ist deployed (provider-abstrahiert, aktuell Resend).
+- GitHub-Repository ist mit Cloudflare Pages verbunden (auto-deploy bei Push auf `main`).
 - Monetarisierung ist noch offen und wird nach Launch entschieden.
 
 ## Technologie-Stack
@@ -41,21 +43,25 @@ wrangler.toml     -> Cloudflare-Konfiguration (inkl. AI-Binding)
 - **Backend:** `POST /api/chat` in `functions/api/[[route]].ts`.
 - **KI:** Cloudflare Workers AI (`@cf/meta/llama-3.1-8b-instruct-fp8-fast`).
 - **Kostenoptimierung:** Regelbasierte FAQ-Shortcuts, begrenzte Antwortlänge (max. 350 Tokens), Chatverlauf auf 5 Nachrichten begrenzt.
+- **Abuse-Schutz:** Tägliches Budget pro IP/Session (D1-Tabelle `chat_usage`), Prompt-Injection-Filter, Output-Moderation, Rate-Limiting.
 - **Dokumentation:** Details unter `docs/chatbot.md`.
 
 ## API-Endpunkte
-- `POST /api/waitlist` — E-Mail für Waitlist speichern
-- `POST /api/quiz` — Quiz-Antworten speichern und Empfehlungen berechnen
+- `POST /api/waitlist` — E-Mail für Waitlist speichern (mit Rate-Limit + optional DNS-MX-Check)
+- `POST /api/quiz` — Quiz-Antworten speichern und Empfehlungen berechnen (mit Rate-Limit)
 - `GET /api/recommendations?session_id=...` — Empfehlungen abrufen
-- `POST /api/feedback` — Feedback zu Empfehlungen speichern (Sterne, Match, NPS, Freitext)
+- `POST /api/feedback` — Feedback zu Empfehlungen speichern (Sterne, Match, NPS, Freitext; mit Rate-Limit)
 - `POST /api/share/email` — Empfehlungen per E-Mail senden
 - `GET /api/admin/feedback?key=...` — Zusammenfassung des Empfehlungs-Feedbacks (Admin)
+- `GET /api/admin/chat-logs?key=...` — Anonyme Chat-Logs (Admin)
+- `GET /api/admin/abuse?key=...` — Abuse-Events der letzten 7 Tage (Admin)
 - `GET /api/programs` — Liste aller Studiengänge (für interne Zwecke)
-- `POST /api/chat` — Studienberater-Chatbot (Cloudflare Workers AI mit FAQ-Shortcuts)
+- `POST /api/chat` — Studienberater-Chatbot (Cloudflare Workers AI mit FAQ-Shortcuts, Budget, Moderation)
 
 ## Datenstrategie
 - **MVP:** Regelbasiertes Matching auf einem kuratierten Seed-Datensatz deutscher Studiengänge.
-- **Zukunft:** LLM-gestützte Empfehlungen (RAG über Studiengangsdaten + natürlichsprachliche Begründungen).
+- **LLM-Enrichment:** Studiengangsbeschreibungen, Berufsfelder, Interessen-/Stärken-/Arbeitsstil-Tags wurden mit OpenAI (`gpt-4o-mini`) differenziert pro Studiengang angereichert.
+- **Zukunft:** LLM-gestützte Empfehlungen (RAG über Studiengangsdaten + natürlichsprachliche Begründungen pro Nutzer).
 - Mögliche externe Datenquellen für später:
   - Hochschulkompass (alle deutschen Studiengänge)
   - BERUFENET API (Berufs- und Ausbildungsdaten)

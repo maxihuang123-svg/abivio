@@ -3,80 +3,84 @@
 Aktueller Projektstand für den nächsten Chat. Diese Datei sollte am Ende jeder Sitzung aktualisiert werden.
 
 ## Fokus
-- MVP für abivio.de ist live auf https://abivio.pages.dev
-- Datenbasis von 56 auf 200 Studiengänge erweitert und in Cloudflare D1 deployed
-- Manuelle Kuratierung + Mock-LLM-Enrichment für Beschreibungen/Tags
+- MVP für abivio.de ist live auf https://abivio.de und https://abivio.pages.dev
+- Datenbasis: ~1.000 studiengangsspezifische Bachelor-Angebote an 32 Top-Unis
+- LLM-Enrichment der Studiengangsbeschreibungen, Tags und Berufsfelder abgeschlossen
+- E-Mail-Share-Funktion deployed und via Resend produktiv
+- GitHub-Repository mit Cloudflare Pages verbunden (auto-deploy bei Push auf `main`)
 
 ## Zuletzt erledigt
-- 200 Studiengänge in `db/programs_200_raw.json` generiert (Fachrichtungen verteilt)
-- Mit `scripts/enrich-programs.js` angereichert → `db/programs_200_enriched.json`
-- `scripts/generate-programs-seed.js` erstellt, wandelt JSON in D1-kompatibles SQL um (char()-Encoding für Umlaute)
-- SQL-Seed `db/seed_200.sql` erfolgreich auf Remote-D1 (`abivio-db`) angewendet
-- API-Endpunkte getestet:
-  - GET /api/programs liefert 200 Programme
-  - POST /api/quiz berechnet Empfehlungen korrekt
-  - GET /api/recommendations?session_id=... gibt gespeicherte Empfehlungen zurück
+- 200 Basis-Studiengänge mit OpenAI (`gpt-4o-mini`) angereichert → `db/programs_200_enriched.json`
+- Programme auf 32 Top-Unis ausgeweitet → `db/programs_expanded.json` (~1.000 Einträge)
+- `seed_expanded.sql` mit `char()`-Encoding für D1-Kompatibilität generiert
+- Remote-D1 (`abivio-db`) mit 1.000 angereicherten Programmen befüllt
+- E-Mail-Share-Code zu provider-abstrahiertem Design umgebaut (Resend, Brevo, Sendgrid, AWS SES Stub)
+- `RESEND_API_KEY` als Cloudflare Pages Secret gesetzt
+- Production-Deploy auf `abivio.de` / `abivio.pages.dev` durchgeführt
+- GitHub-Repository mit Cloudflare Pages verbunden, Default-Branch auf `main` umgestellt
+- README, Roadmap, Feature-Doku und .gitignore aktualisiert
 
 ## Architektur & Tech-Stack
 - Frontend: statische HTML/CSS/JS unter `frontend/`, deployed auf Cloudflare Pages
 - Backend: Hono-Worker unter `functions/api/[[route]].ts` (Cloudflare Pages Functions)
 - Datenbank: Cloudflare D1 (SQLite), Binding `DB`, Name `abivio-db`
-- Deployment: `wrangler` CLI
+- KI: Cloudflare Workers AI (`@cf/meta/llama-3.1-8b-instruct-fp8-fast`) für Chatbot
+- E-Mail: Provider-abstrahiert, aktuell Resend (konfigurierbar über `EMAIL_PROVIDER`)
+- Deployment: Automatisch via GitHub → Cloudflare Pages; manuell via `wrangler pages deploy frontend --branch=main`
 
 ## Wichtige Dateien
 - `db/schema.sql` — D1-Schema
-- `db/programs_200_raw.json` — rohe 200-Programm-Liste
-- `db/programs_200_enriched.json` — mit Tags/Beschreibungen angereichert
-- `db/seed_200.sql` — D1-Seed für 200 Programme
-- `scripts/generate-programs-200.js` — generiert die 200-Programm-Liste
-- `scripts/enrich-programs.js` — LLB/Mock-Enrichment
+- `db/programs_200_enriched.json` — 200 LLM-angereicherte Basis-Studiengänge
+- `db/programs_expanded.json` — ~1.000 uni-spezifische Angebote
+- `db/seed_expanded.sql` — D1-Seed für ~1.000 Programme
+- `db/seed_200.sql` — D1-Seed für 200 Basis-Programme
+- `scripts/enrich-programs.js` — LLM-Enrichment mit Resume-Cache
+- `scripts/expand-programs-to-universities.js` — expandiert Basis-Programme auf Unis
 - `scripts/generate-programs-seed.js` — JSON → D1 SQL
-- `functions/api/[[route]].ts` — Hono API
+- `functions/api/[[route]].ts` — Hono API mit Quiz, Empfehlungen, Feedback, E-Mail-Share, Chatbot, Admin
 - `AGENTS.md` — Projekt- und Coding-Conventions
 
 ## Bekannte Einschränkungen & Workarounds
-- Kein OpenAI-API-Key verfügbar → Enrichment läuft im Mock-Modus (generische, aber passende Beschreibungen/Tags)
-- D1 interpretiert UTF-8-Literale beim `wrangler d1 execute` teilweise falsch → Seed verwendet `char()`-Funktion für alle Nicht-ASCII-Zeichen
-- Programme haben keine `university_id` (NULL), weil MVP-Fokus auf Fachrichtung/Matching liegt, nicht auf konkreter Hochschule
+- D1 interpretiert UTF-8-Literale beim `wrangler d1 execute` teilweise falsch → Seeds verwenden `char()`-Funktion für Nicht-ASCII-Zeichen
+- AWS SES-E-Mail-Provider ist im Code als Stub hinterlegt, noch nicht vollständig implementiert
+- Absender-Domain `noreply@abivio.de` muss in Resend verifiziert werden, bevor echte E-Mails zuverlässig ankommen
+- NC-Informationen sind geschätzte Richtwerte, keine Garantie
 
 ## Offene Entscheidungen
-- Sollen wir echte OpenAI-API-Keys einbinden, um Beschreibungen qualitativ hochwertiger zu machen?
-- Sollen wir Programme mit realen Universitäten verknüpfen (z.B. über Hochschulkompass-Daten oder HRK-Kooperation)?
-- Wie gehen wir mit NC-Informationen um? Derzeit geschätzte Richtwerte, keine Garantie.
+- Sollen wir bei Resend bleiben oder auf Brevo/Sendgrid/AWS SES umstellen, wenn das Volumen steigt?
+- Wie gehen wir mit User-Accounts / Magic-Link-Login um? (aktuell keine Accounts)
+- Welche Analytics/Tracking-Lösung wird eingesetzt? (Cloudflare Web Analytics Token fehlt noch)
 
 ## Nächste Schritte (Vorschläge)
-1. Qualität der 200 Programme manuell prüfen und ggf. korrigieren
-2. Universitätszuordnung ergänzen oder zumindest Beispiel-Hochschulen verlinken
-3. Quiz-Frontend so anpassen, dass es die neuen Tags/Felder nutzt
-4. OpenAI-Integration für echtes Enrichment vorbereiten (`OPENAI_API_KEY` als wrangler secret)
-5. Monitoring/Analytics für Quiz-Abschlüsse ergänzen
-6. Custom Domain `abivio.de` im Cloudflare-Dashboard verbinden
-7. Datenschutz-Hinweise und Impressum für MVP ergänzen
+1. Resend-Domain `abivio.de` verifizieren
+2. Impressum & Datenschutz finalisieren
+3. Cloudflare Web Analytics Token einbauen
+4. Rate Limiting & Abuse-Schutz für API-Endpoints vervollständigen
+5. Erste Nutzerinterviews durchführen und Quiz-Matching iterieren
+6. AWS SES-Provider vollständig implementieren (optional)
 
 ## Nützliche Befehle
 ```powershell
-# 200 Programme neu generieren
-node scripts/generate-programs-200.js
+# Programme anreichern (mit OPENAI_API_KEY)
+node scripts/enrich-programs.js db/programs_200_enriched.json db/programs_200_enriched.json
 
-# Programme anreichern (Mock-Modus ohne API-Key)
-node scripts/enrich-programs.js db/programs_200_raw.json db/programs_200_enriched.json
-
-# SQL-Seed generieren
-node scripts/generate-programs-seed.js db/programs_200_enriched.json db/seed_200.sql
+# Programme auf Unis ausweiten + SQL generieren
+node scripts/expand-programs-to-universities.js
 
 # Seed auf Remote-D1 anwenden
-npx wrangler d1 execute abivio-db --file db/seed_200.sql --remote
+npx wrangler d1 execute abivio-db --file db/seed_expanded.sql --remote
 
 # Lokalen Dev-Server starten
-npx wrangler pages dev frontend --compatibility-date=2026-07-06 --binding DB=abivio-db
+npm run dev
 
-# Deployen
-npx wrangler pages deploy frontend
+# Manuell deployen (normalerweise nicht nötig, da GitHub Auto-Deploy)
+npx wrangler pages deploy frontend --branch=main
 ```
 
 ## Kontakt & Ressourcen
 - GitHub: https://github.com/maxihuang123-svg/abivio
-- Live: https://abivio.pages.dev
+- Live: https://abivio.de
+- Pages Alias: https://abivio.pages.dev
 - Strategie: `docs/strategy.md`
-- Datenbeschaffung: `docs/data-acquisition.md`
-- HRK-Outreach-Template: `docs/hrk-outreach-template.md`
+- Roadmap: `docs/roadmap.md`
+- Feature-Doku: `docs/feature.md`

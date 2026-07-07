@@ -1,7 +1,7 @@
 # Feature-Übersicht — abivio.de
 
 > Dokumentation aller aktuell umgesetzten Features, Endpoints und Konfigurationen.
-> Letzte Aktualisierung: 2026-07-07
+> Letzte Aktualisierung: 2026-07-08
 
 ---
 
@@ -14,7 +14,7 @@
 | Backend | Cloudflare Pages Functions mit Hono (TypeScript) |
 | Datenbank | Cloudflare D1 (SQLite) |
 | KI | Cloudflare Workers AI (`@cf/meta/llama-3.1-8b-instruct-fp8-fast`) |
-| E-Mail | Resend (konfigurierbar über `RESEND_API_KEY`) |
+| E-Mail | Provider-abstrahiert: Resend (default), Brevo, Sendgrid, AWS SES (Stub) |
 | Analytics | Cloudflare Web Analytics |
 
 ---
@@ -48,6 +48,8 @@
 
 ### Teilen & Speichern
 - **Per E-Mail senden:** Nutzer gibt E-Mail ein, Backend verschickt formatierte Empfehlungen
+  - Provider auswählbar über `EMAIL_PROVIDER` (default: `resend`)
+  - Absender konfigurierbar über `EMAIL_FROM`
 - **Teilbarer Link:** `https://abivio.de/?session=SESSION_ID`
 - Link lädt Empfehlungen direkt beim Öffnen
 
@@ -103,7 +105,12 @@
 
 ### Secrets (über `wrangler pages secret put`)
 - `ADMIN_API_KEY` — Zugriff auf Admin-Endpoints
+- `EMAIL_PROVIDER` — E-Mail-Provider: `resend` (default), `brevo`, `sendgrid`, `aws-ses`
+- `EMAIL_FROM` — Absender-Adresse, z. B. `abivio <noreply@abivio.de>`
 - `RESEND_API_KEY` — E-Mail-Versand über Resend
+- `BREVO_API_KEY` — E-Mail-Versand über Brevo
+- `SENDGRID_API_KEY` — E-Mail-Versand über Sendgrid
+- `AWS_SES_ACCESS_KEY`, `AWS_SES_SECRET_KEY`, `AWS_SES_REGION` — E-Mail-Versand über AWS SES
 
 ### Analytics
 - Cloudflare Web Analytics Script in `frontend/index.html`
@@ -138,11 +145,11 @@ Liefert:
 
 1. Absender-Domain `noreply@abivio.de` in Resend verifizieren
 2. Cloudflare Web Analytics Token ersetzen
-3. Rate Limiting für API-Endpoints einführen
-4. Rate Limiting für API-Endpoints einführen
-5. E-Mail-Validierung für Waitlist verschärfen (z. B. MX-Check)
-6. Chat-Budget pro Session/Tag limitieren
-7. Entscheidung: User-Accounts / Magic-Link-Login
+3. Rate Limiting für API-Endpoints vervollständigen
+4. E-Mail-Validierung für Waitlist verschärfen (z. B. MX-Check)
+5. Chat-Budget pro Session/Tag limitieren
+6. Entscheidung: User-Accounts / Magic-Link-Login
+7. AWS SES-Provider vollständig implementieren (aktuell Stub)
 
 ---
 
@@ -155,6 +162,8 @@ Liefert:
 - ✅ Teilen per Link + E-Mail
 - ✅ KI-Chatbot mit FAQ-Shortcuts
 - ✅ Admin-Auswertung
+- ✅ LLM-angereicherter Studiengangsdatensatz (200 → ~1.000)
+- ✅ GitHub-Integration mit Auto-Deploy
 - ⏳ Rate Limiting & Abuse-Schutz
 - ⏳ Accounts / Magic Link
-- ⏳ Erweiterter Studiengangsdatensatz
+- ⏳ Erweiterte Filter (Bundesland, Hochschultyp, Sprache)

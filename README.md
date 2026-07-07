@@ -4,8 +4,9 @@ KI-gestützte Studienempfehlungsplattform für deutsche Abiturienten.
 
 ## Live-Version
 
-- **Pages Preview:** https://abivio.pages.dev
-- **Eigene Domain:** abivio.de (noch zu verbinden, siehe unten)
+- **Production:** https://abivio.de
+- **Pages Alias:** https://abivio.pages.dev
+- **GitHub:** https://github.com/maxihuang123-svg/abivio
 
 ## Was ist bereits umgesetzt?
 
@@ -14,8 +15,13 @@ KI-gestützte Studienempfehlungsplattform für deutsche Abiturienten.
 - Regelbasierte Studiumsempfehlungen
 - Cloudflare Pages + Functions + D1
 - 200 kuratierte deutsche Bachelor-Studiengänge
+- LLM-gestützte Anreicherung der Studiengangsbeschreibungen, Tags und Berufsfelder
 - Ausgeweitet auf ~1.000 studiengangsspezifische Angebote an 32 Top-Unis
 - Bewerbungsfristen-Fokus auf den 15.07. (Wintersemester)
+- Teilen-Funktion: Empfehlungen per E-Mail (provider-wechselbar: Resend, Brevo, Sendgrid)
+- Schwebender KI-Studienberater-Chatbot mit FAQ-Shortcuts
+- Admin-Auswertung für Feedback und Chat-Logs
+- GitHub-Repository mit Cloudflare Pages verbunden (auto-deploy bei Push auf `main`)
 
 ## Schnellstart (lokal)
 
@@ -32,6 +38,12 @@ npm run dev
 
 Voraussetzung: Du bist mit `wrangler login` bei Cloudflare angemeldet.
 
+### Automatisch via GitHub (empfohlen)
+
+Das Cloudflare Pages-Projekt ist mit dem GitHub-Repository verbunden. Jeder Push auf `main` löst automatisch einen Deploy aus.
+
+### Manuell via wrangler
+
 ```bash
 # Datenbank (nur einmal nötig)
 npm run db:create
@@ -42,15 +54,15 @@ npm run db:seed
 npx wrangler pages project create abivio --production-branch main
 
 # Deploy
-npm run deploy
+npx wrangler pages deploy frontend --branch=main
 ```
 
-## Eigene Domain verbinden
+## Eigene Domain
+
+`abivio.de` ist mit Cloudflare Pages verbunden und erreichbar. Bei Änderungen an DNS oder Custom Domain:
 
 1. Cloudflare Dashboard → Pages → abivio → Custom domains
-2. `abivio.de` hinzufügen
-3. Wenn die Domain bei Cloudflare registriert ist, wird sie automatisch konfiguriert
-4. Andernfalls musst du die Nameserver auf Cloudflare umstellen oder einen CNAME-Eintrag setzen
+2. `abivio.de` verwalten oder neu hinzufügen
 
 ## Projektstruktur
 
@@ -75,9 +87,10 @@ wrangler.toml     # Cloudflare-Konfiguration
 
 ## Nächste Schritte
 
-- [ ] abivio.de als Custom Domain verbinden
-- [ ] Analytics/Tracking hinzufügen (Cloudflare Web Analytics Token ersetzen)
+- [ ] Analytics/Tracking aktivieren (Cloudflare Web Analytics Token ersetzen)
 - [ ] Impressum + Datenschutz mit echten Daten ausfüllen
-- [ ] Nutzerfeedback nach dem Quiz sammeln
+- [ ] E-Mail-Absender-Domain `noreply@abivio.de` in Resend verifizieren
+- [ ] Nutzerfeedback systematisch auswerten und Quiz-Matching iterieren
 - [ ] Bewerbungsfristen-Reminder per E-Mail
 - [ ] Daten-Explorer intern verlinken (optional)
+- [ ] Rate Limiting & Abuse-Schutz für API-Endpoints vervollständigen
