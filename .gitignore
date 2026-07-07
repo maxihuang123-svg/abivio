@@ -17,3 +17,8 @@ Thumbs.db
 deploy-output.txt
 project-create-output.txt
 d1-create-output.txt
+
+# Secrets / local admin credentials
+.admin-key.txt
+.env
+.env.local

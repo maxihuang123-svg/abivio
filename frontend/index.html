@@ -133,7 +133,48 @@
     </div>
   </footer>
 
+  <!-- Chat widget -->
+  <div id="chat-widget" class="chat-widget" hidden>
+    <div class="chat-header">
+      <div class="chat-title">
+        <span class="chat-dot"></span>
+        <span>abivio Studienberater</span>
+      </div>
+      <button id="chat-close" class="chat-close" aria-label="Chat schließen">×</button>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+      <div class="chat-message chat-message-bot">
+        <p>Hallo! Ich helfe dir bei Fragen zur Studienwahl, NCs, Bewerbung und Uni vs. FH. Worüber möchtest du sprechen?</p>
+      </div>
+    </div>
+    <form id="chat-form" class="chat-form">
+      <input
+        id="chat-input"
+        type="text"
+        class="chat-input"
+        placeholder="Stell eine Frage…"
+        autocomplete="off"
+        maxlength="500"
+        aria-label="Nachricht"
+      />
+      <button type="submit" class="chat-send" aria-label="Senden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <button id="chat-toggle" class="chat-toggle" aria-label="Studienberater öffnen">
+    <svg class="chat-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span class="chat-toggle-label">Berater</span>
+  </button>
+
   <script src="app.js"></script>
+  <script src="chat.js"></script>
 
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "DEIN_TOKEN"}'></script>

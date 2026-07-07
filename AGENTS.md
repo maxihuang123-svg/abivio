@@ -29,17 +29,26 @@ Detaillierter Deutschland-Fokusplan in `docs/strategy.md`.
 ## Architektur
 ```
 frontend/         -> Cloudflare Pages (statische Assets)
+frontend/chat.js  -> Schwebender Studienberater-Chatbot
 functions/api/    -> Cloudflare Pages Functions (API-Endpunkte via Hono)
 db/               -> D1 Schema + Seed-Daten
 scripts/          -> Hilfsskripte für Migrationen/Seeding
-wrangler.toml     -> Cloudflare-Konfiguration
+wrangler.toml     -> Cloudflare-Konfiguration (inkl. AI-Binding)
 ```
+
+### Chatbot
+- **Frontend:** Schwebender Chat-Button auf `index.html`, gesteuert durch `frontend/chat.js`.
+- **Backend:** `POST /api/chat` in `functions/api/[[route]].ts`.
+- **KI:** Cloudflare Workers AI (`@cf/meta/llama-3.1-8b-instruct-fp8-fast`).
+- **Kostenoptimierung:** Regelbasierte FAQ-Shortcuts, begrenzte Antwortlänge (max. 350 Tokens), Chatverlauf auf 5 Nachrichten begrenzt.
+- **Dokumentation:** Details unter `docs/chatbot.md`.
 
 ## API-Endpunkte
 - `POST /api/waitlist` — E-Mail für Waitlist speichern
 - `POST /api/quiz` — Quiz-Antworten speichern und Empfehlungen berechnen
 - `GET /api/recommendations?session_id=...` — Empfehlungen abrufen
 - `GET /api/programs` — Liste aller Studiengänge (für interne Zwecke)
+- `POST /api/chat` — Studienberater-Chatbot (Cloudflare Workers AI mit FAQ-Shortcuts)
 
 ## Datenstrategie
 - **MVP:** Regelbasiertes Matching auf einem kuratierten Seed-Datensatz deutscher Studiengänge.

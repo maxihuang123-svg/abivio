@@ -101,3 +101,16 @@ CREATE TABLE recommendations (
   FOREIGN KEY (session_id) REFERENCES quiz_sessions(id),
   FOREIGN KEY (program_id) REFERENCES programs(id)
 );
+
+-- Anonymous chat logs for improving the chatbot
+-- Only stored when the user explicitly consents.
+-- No IP address, e-mail, or session identifier is stored.
+CREATE TABLE chat_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  question_preview TEXT,        -- First 120 chars of the question, only if consent given
+  detected_intent TEXT,         -- e.g. "nc", "bewerbung", "allgemein"
+  response_source TEXT NOT NULL,-- "faq" or "llm"
+  model TEXT,                   -- AI model name if LLM was used
+  consent_given BOOLEAN DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
