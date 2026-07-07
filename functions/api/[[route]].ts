@@ -198,13 +198,26 @@ app.post('/chat', async (c) => {
     });
   }
 
-  // 2. Verlauf auf die letzten 5 Nachrichten begrenzen, um Tokens zu sparen
+  // 2. Themen-Filter: Nur studienrelevante Fragen erlauben
+  if (!isQuestionAllowed(userQuestion)) {
+    const offTopicResponse =
+      'Ich bin dein Studienberater für die Studienwahl in Deutschland. Stell mir gerne Fragen zu Studiengängen, NCs, Bewerbung, Uni vs. FH oder Bewerbungsfristen.';
+    await logChatQuestion(c.env.DB, userQuestion, offTopicResponse, 'blocked', null, consent);
+    return c.json({
+      response: offTopicResponse,
+      model: 'topic-filter',
+      cached: true,
+    });
+  }
+
+  // 3. Verlauf auf die letzten 5 Nachrichten begrenzen, um Tokens zu sparen
   const recentMessages = messages.slice(-5);
 
-  // 3. Kurzer, präziser System-Prompt
+  // 4. Kurzer, präziser System-Prompt
   const systemPrompt = `Du bist der abivio-Studienberater für Abiturienten und Fachabiturienten in Deutschland.
+Beantworte AUSSCHLIESSLICH Fragen zu Studienwahl, Bachelor-Studiengängen, NC, Bewerbung, Unterschiede zwischen Uni/FH und Bewerbungsfristen in Deutschland.
 Antworte kurz, verständlich und praxisnah (max. 2–3 Absätze).
-Themen: Studienwahl, Bachelor-Studiengänge, NC, Bewerbung, Unterschiede zwischen Uni/FH, Fristen.
+Wenn eine Frage nichts mit diesen Themen zu tun hat, sage höflich, dass du dazu nicht helfen kannst, und frage nach einer studienbezogenen Frage.
 Grenzen: Du gibst keine Rechts-, Therapie- oder Finanzberatung. Du garantierst keine Zulassung.
 Wenn dir eine Frage zu spezifisch ist, verweise höflich auf offizielle Quellen wie hochschulkompass.de, uni-assist.de oder hochschulstart.de.`;
 
@@ -406,6 +419,128 @@ function getFaqShortcut(question: string): string | null {
   }
 
   return null;
+}
+
+function isQuestionAllowed(question: string): boolean {
+  const normalized = question.toLowerCase().trim();
+
+  // Explicitly off-topic patterns that should be blocked immediately
+  const blockedPatterns = [
+    /^was ist\s+\d+\s*[\+\-\*\/]\s*\d+/, // "was ist 1+1"
+    /\d+\s*[\+\-\*\/]\s*\d+\s*=?$/, // "1 + 1", "5*3"
+    'weltkrieg',
+    'kochrezept',
+    'wetter',
+    'bundeskanzler',
+    'bundespräsident',
+    'aktuelle politik',
+    'lotto',
+    'aktienkurs',
+    'bitcoin',
+    'krypto',
+    'sport ergebnis',
+    'fußball',
+    'rechne',
+    'berechne',
+    'wer hat erfunden',
+    'wie alt ist',
+    'wie viel uhr',
+    'welcher tag ist heute',
+  ];
+
+  for (const pattern of blockedPatterns) {
+    if (typeof pattern === 'string') {
+      if (normalized.includes(pattern)) return false;
+    } else if (pattern instanceof RegExp) {
+      if (pattern.test(normalized)) return false;
+    }
+  }
+
+  // Allowed study-related keywords. If none match, the question is likely off-topic.
+  const allowedKeywords = [
+    'studium',
+    'studiengang',
+    'studieren',
+    'bachelor',
+    'uni',
+    'universität',
+    'fachhochschule',
+    'fh',
+    'haw',
+    'nc',
+    'numerus clausus',
+    'bewerb',
+    'hochschulstart',
+    'uni-assist',
+    'frist',
+    'semester',
+    'vorlesung',
+    'prüfung',
+    'abschluss',
+    'beruf',
+    'karriere',
+    'abitur',
+    'fachabitur',
+    'ausbildung',
+    'dual',
+    'schüler',
+    'student',
+    'hörsaal',
+    'campus',
+    'tum',
+    'lmu',
+    'kit',
+    'rwth',
+    'fu berlin',
+    'humoldt',
+    'tu',
+    'informatik',
+    'wirtschaft',
+    'medizin',
+    'psychologie',
+    'jura',
+    'bwl',
+    'vwl',
+    'maschinenbau',
+    'elektrotechnik',
+    'biologie',
+    'chemie',
+    'physik',
+    'mathematik',
+    'englisch',
+    'deutsch',
+    'geschichte',
+    'kunst',
+    'musik',
+    'sport',
+    'sozial',
+    'pädagogik',
+    'lehramt',
+    'pflege',
+    'gesundheit',
+    'pharmazie',
+    'architektur',
+    'design',
+    'medien',
+    'journalismus',
+    'politik',
+    'geisteswissenschaft',
+    'naturwissenschaft',
+    'ingenieur',
+    'technik',
+    'ai',
+    'künstliche intelligenz',
+    'data science',
+    'nachhaltigkeit',
+    'klimawandel',
+    'abivio',
+    'quiz',
+    'empfehlung',
+    'hochschulkompass',
+    'daad',
+  ];
+
+  return allowedKeywords.some((kw) => normalized.includes(kw));
 }
 
 app.notFound((c) => c.json({ error: 'Not found' }, 404));
