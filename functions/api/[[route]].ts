@@ -54,6 +54,8 @@ interface Env {
   RESEND_API_KEY?: string;
   RESEND_API_TOKEN?: string;
   RESEND_TOKEN?: string;
+  resend?: string;
+  RESEND?: string;
   BREVO_API_KEY?: string;
   SENDGRID_API_KEY?: string;
   AWS_SES_ACCESS_KEY?: string;
@@ -68,7 +70,7 @@ app.get('/health', (c) =>
   c.json({
     ok: true,
     env: c.env.ENVIRONMENT || 'dev',
-    email_configured: !!(c.env.RESEND_API_KEY || c.env.RESEND_API_TOKEN || c.env.RESEND_TOKEN || c.env.BREVO_API_KEY || c.env.SENDGRID_API_KEY),
+    email_configured: !!(c.env.RESEND_API_KEY || c.env.RESEND_API_TOKEN || c.env.RESEND_TOKEN || c.env.resend || c.env.RESEND || c.env.BREVO_API_KEY || c.env.SENDGRID_API_KEY),
   })
 );
 
@@ -990,7 +992,7 @@ function createEmailProvider(env: Env): EmailProvider | null {
   switch (provider) {
     case 'resend': {
       // Cloudflare Resend integration may use different binding names
-      const key = env.RESEND_API_KEY || env.RESEND_API_TOKEN || env.RESEND_TOKEN;
+      const key = env.RESEND_API_KEY || env.RESEND_API_TOKEN || env.RESEND_TOKEN || env.resend || env.RESEND;
       return key ? new ResendEmailProvider(key, getDefaultFrom(env)) : null;
     }
     case 'brevo':

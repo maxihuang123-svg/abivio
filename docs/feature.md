@@ -136,9 +136,9 @@ Liefert:
 
 ## Offene To-Dos / Bekannte Lücken
 
-1. `RESEND_API_KEY` als Cloudflare Pages Secret setzen, um E-Mail-Versand zu aktivieren (`npx wrangler pages secret put RESEND_API_KEY`)
-2. Absender-Domain `noreply@abivio.de` in Resend verifizieren
-3. Cloudflare Web Analytics Token ersetzen
+1. Absender-Domain `noreply@abivio.de` in Resend verifizieren
+2. Cloudflare Web Analytics Token ersetzen
+3. Rate Limiting für API-Endpoints einführen
 4. Rate Limiting für API-Endpoints einführen
 5. E-Mail-Validierung für Waitlist verschärfen (z. B. MX-Check)
 6. Chat-Budget pro Session/Tag limitieren
