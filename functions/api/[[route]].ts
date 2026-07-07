@@ -64,7 +64,13 @@ interface Env {
 const app = new Hono<{ Bindings: Env }>().basePath('/api');
 
 // Health check
-app.get('/health', (c) => c.json({ ok: true, env: c.env.ENVIRONMENT || 'dev' }));
+app.get('/health', (c) =>
+  c.json({
+    ok: true,
+    env: c.env.ENVIRONMENT || 'dev',
+    email_configured: !!(c.env.RESEND_API_KEY || c.env.RESEND_API_TOKEN || c.env.RESEND_TOKEN || c.env.BREVO_API_KEY || c.env.SENDGRID_API_KEY),
+  })
+);
 
 // Waitlist signup
 app.post('/waitlist', async (c) => {
