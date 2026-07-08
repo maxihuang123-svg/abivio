@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "KI-gestützte Studienempfehlungsplattform für deutsche Abiturienten",
   "scripts": {
+    "build": "echo 'No build step required for static frontend'",
     "dev": "wrangler pages dev frontend --compatibility-date=2026-06-28",
     "deploy": "wrangler pages deploy frontend",
     "db:create": "wrangler d1 create abivio-db",
