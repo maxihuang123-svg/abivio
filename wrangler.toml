@@ -5,6 +5,9 @@ compatibility_flags = ["nodejs_compat"]
 # Cloudflare Pages config
 pages_build_output_dir = "frontend"
 
+[build]
+command = "npm ci"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "abivio-db"
